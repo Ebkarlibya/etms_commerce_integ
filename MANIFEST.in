@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include etms_commerce_integ *.css
+recursive-include etms_commerce_integ *.csv
+recursive-include etms_commerce_integ *.html
+recursive-include etms_commerce_integ *.ico
+recursive-include etms_commerce_integ *.js
+recursive-include etms_commerce_integ *.json
+recursive-include etms_commerce_integ *.md
+recursive-include etms_commerce_integ *.png
+recursive-include etms_commerce_integ *.py
+recursive-include etms_commerce_integ *.svg
+recursive-include etms_commerce_integ *.txt
+recursive-exclude etms_commerce_integ *.pyc
