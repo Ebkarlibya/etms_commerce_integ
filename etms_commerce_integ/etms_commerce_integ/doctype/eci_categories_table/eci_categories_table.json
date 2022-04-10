@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-04-08 15:12:45.334441",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "category_name",
+  "sub_category_1"
+ ],
+ "fields": [
+  {
+   "fieldname": "category_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Category Name",
+   "options": "ECI Category"
+  },
+  {
+   "fieldname": "sub_category_1",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sub Category",
+   "options": "ECI Category"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-04-08 15:28:23.387722",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Categories Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
