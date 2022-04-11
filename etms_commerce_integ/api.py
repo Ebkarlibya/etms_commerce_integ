@@ -37,3 +37,215 @@ def categories():
             "count": count[0][0]
         })
     return categories
+
+
+@frappe.whitelist(allow_guest=True)
+def products():
+    products = []
+    eci_products = frappe.get_all("Item", 
+        fields=["item_code", "item_name", "description"])
+
+    for prod in eci_products:
+        # get product price
+        price = frappe.get_all("Item Price", 
+            fields=["price_list_rate"],
+            filters={"item_code": prod.item_code},
+            order_by="valid_from desc")[0]["price_list_rate"]
+
+        products.append({
+            "id": prod.item_code,
+            "name": prod.item_name,
+            "slug": prod.item_name,
+            "type": "simple",
+            "status": "publish",
+            "featured": False,
+            #"catalog_visibility": "visible",
+            "description": prod.description,
+            #"short_description": prod.description,
+            #"sku": "asd-dsa-dsa",
+            "price": price,
+            #"regular_price": 25, show up as discounted price in flutter
+            "sale_price": price,
+            #"stock_quantity": 70,
+            "in_stock": True,
+            "categories": [
+                {
+                    "id": 204,
+                    "name": "فلاتر زيت",
+                    "slug": "falatr-zait"
+                }
+            ],
+            "tags": [
+                {
+                    "id": 664,
+                    "name": "فلتر زيت افانتي",
+                    "slug": "falatir-zait-avanti"
+                }
+            ],
+            "images": [
+                {
+                    "id": 7154,
+                    "date_created": "2021-08-17T12:45:22",
+                    "date_created_gmt": "2021-08-17T12:45:22",
+                    "date_modified": "2021-08-17T12:45:22",
+                    "date_modified_gmt": "2021-08-17T12:45:22",
+                    "src": "https://torous.ly/wp-content/uploads/2021/08/71C1tBnZ8L._AC_SL1500_.jpg",
+                    "name": "71C+1tBnZ8L._AC_SL1500_",
+                    "alt": "",
+                    "position": 0
+                },
+                {
+                    "id": 7153,
+                    "date_created": "2021-08-17T12:45:18",
+                    "date_created_gmt": "2021-08-17T12:45:18",
+                    "date_modified": "2021-08-17T12:45:18",
+                    "date_modified_gmt": "2021-08-17T12:45:18",
+                    "src": "https://torous.ly/wp-content/uploads/2021/08/812cDxiQdyL._AC_SL1500_.jpg",
+                    "name": "812cDxiQdyL._AC_SL1500_",
+                    "alt": "",
+                    "position": 1
+                },
+                {
+                    "id": 7155,
+                    "date_created": "2021-08-17T13:06:08",
+                    "date_created_gmt": "2021-08-17T13:06:08",
+                    "date_modified": "2021-08-17T13:06:08",
+                    "date_modified_gmt": "2021-08-17T13:06:08",
+                    "src": "https://torous.ly/wp-content/uploads/2021/08/07c87bd5c5edb01ca56184a898155f68.jpg",
+                    "name": "07c87bd5c5edb01ca56184a898155f68",
+                    "alt": "",
+                    "position": 2
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 3,
+                    "name": "car-makes",
+                    "position": 0,
+                    "visible": True,
+                    "variation": False,
+                    "options": [
+                    "Hyundai"
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "car-model",
+                    "position": 1,
+                    "visible": False,
+                    "variation": False,
+                    "options": [
+                        "hyundai avante 2005 2006 2007 2008 2009"
+                    ]
+                }
+            ],
+            "meta_data": [
+                {
+                    "id": 22120,
+                    "key": "recommend_product",
+                    "value": "0"
+                },
+                {
+                    "id": 22259,
+                    "key": "condition",
+                    "value": "New"
+                },
+                {
+                    "id": 22260,
+                    "key": "_condition",
+                    "value": "field_601e5462ad58a"
+                },
+                {
+                    "id": 22261,
+                    "key": "rs_page_bg_color",
+                    "value": ""
+                },
+                {
+                    "id": 22262,
+                    "key": "page_header_hide",
+                    "value": "0"
+                },
+                {
+                    "id": 22263,
+                    "key": "page_header_style",
+                    "value": ""
+                },
+                {
+                    "id": 22264,
+                    "key": "page_footer_hide",
+                    "value": "0"
+                },
+                {
+                    "id": 22265,
+                    "key": "page_footer_style",
+                    "value": ""
+                },
+                {
+                    "id": 22266,
+                    "key": "copyright_footer_style",
+                    "value": ""
+                },
+                {
+                    "id": 22267,
+                    "key": "page_sidebar_layout",
+                    "value": ""
+                },
+                {
+                    "id": 22268,
+                    "key": "page_sidebar_template",
+                    "value": ""
+                },
+                {
+                    "id": 22269,
+                    "key": "featured_video_product",
+                    "value": ""
+                },
+                {
+                    "id": 22270,
+                    "key": "newproduct",
+                    "value": "0"
+                },
+                {
+                    "id": 22271,
+                    "key": "_yoast_wpseo_primary_product_cat",
+                    "value": "204"
+                },
+                {
+                    "id": 22272,
+                    "key": "_yoast_wpseo_content_score",
+                    "value": "30"
+                },
+                {
+                    "id": 22273,
+                    "key": "_yoast_wpseo_estimated-reading-time-minutes",
+                    "value": ""
+                },
+                {
+                    "id": 22274,
+                    "key": "_yoast_wpseo_primary_product_brand",
+                    "value": "660"
+                },
+                {
+                    "id": 22275,
+                    "key": "post_views_count",
+                    "value": "94"
+                },
+                {
+                    "id": 22307,
+                    "key": "_yoast_wpseo_primary_vehicle-info",
+                    "value": "670"
+                },
+                {
+                    "id": 22463,
+                    "key": "is_compatible_with_all_vehicles",
+                    "value": "Compatible With Specific Vehicles"
+                },
+                {
+                    "id": 22464,
+                    "key": "_is_compatible_with_all_vehicles",
+                    "value": "field_61348a84db811"
+                }
+                ]
+        })
+    print(products)
+    return products
