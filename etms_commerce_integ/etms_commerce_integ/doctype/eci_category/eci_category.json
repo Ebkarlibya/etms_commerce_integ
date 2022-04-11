@@ -9,9 +9,12 @@
  "field_order": [
   "category_image",
   "category_name",
-  "parent_category",
-  "section_break_4",
-  "category_description"
+  "category_description",
+  "lft",
+  "rgt",
+  "is_group",
+  "old_parent",
+  "parent_eci_category"
  ],
  "fields": [
   {
@@ -22,33 +25,58 @@
    "unique": 1
   },
   {
-   "fieldname": "parent_category",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Parent Category",
-   "options": "ECI Category"
-  },
-  {
    "fieldname": "category_image",
    "fieldtype": "Attach Image",
    "label": "Category Image"
   },
   {
-   "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "category_description",
    "fieldtype": "Small Text",
    "label": "Category Description"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "ECI Category"
+  },
+  {
+   "fieldname": "parent_eci_category",
+   "fieldtype": "Link",
+   "label": "Parent ECI Category",
+   "options": "ECI Category"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_tree": 1,
  "links": [],
- "modified": "2022-04-09 09:39:40.632859",
+ "modified": "2022-04-11 16:12:03.128001",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Category",
+ "nsm_parent_field": "parent_eci_category",
  "owner": "Administrator",
  "permissions": [
   {

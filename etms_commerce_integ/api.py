@@ -1,13 +1,13 @@
 import frappe
 from frappe.utils import get_url
-
+from frappe.desk.treeview import get_children
 
 @frappe.whitelist(allow_guest=True)
 def categories():
     frappe.get_all("Item", filters={})
     categories = []
-    eci_cats = frappe.get_all("ECI Category", 
-        fields=["category_image", "category_name", "parent_category"])
+    eci_cats = frappe.get_all("ECI Category",
+        fields=["category_image", "category_name", "parent_eci_category"])
 
     for cat in eci_cats:
         # count items under this category
@@ -17,10 +17,10 @@ def categories():
             or sub_category_1 = '{cat.category_name}'
         """)
         # flutter parent must be "0"
-        parent = cat.parent_category
-        if not cat.parent_category:
+        parent = cat.parent_eci_category
+        if not cat.parent_eci_category:
             parent = "0"
-        
+
         # build category image url
         category_image_url = ""
         if cat.category_image:
@@ -41,18 +41,28 @@ def categories():
 
 @frappe.whitelist(allow_guest=True)
 def products():
-    products = []
-    eci_products = frappe.get_all("Item", 
+    products_list = []
+    eci_products = frappe.get_all("Item",
         fields=["item_code", "item_name", "description"])
 
     for prod in eci_products:
         # get product price
-        price = frappe.get_all("Item Price", 
+        price = frappe.get_all("Item Price",
             fields=["price_list_rate"],
             filters={"item_code": prod.item_code},
             order_by="valid_from desc")[0]["price_list_rate"]
+        # is the product available in stock
+        actual_qty = frappe.get_all("Bin",
+            fields=["actual_qty"],
+            filters={"item_code": prod.item_code
+        })[0]["actual_qty"]
+        inStock = True if actual_qty >= 1 else False
+        # get product categories
+        product_categories = frappe.get_all("ECI Categories Table",
+                              fields=["category_name", "sub_category_1"],
+                              filters={"parent": prod.item_code})
 
-        products.append({
+        products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
             "slug": prod.item_name,
@@ -67,14 +77,11 @@ def products():
             #"regular_price": 25, show up as discounted price in flutter
             "sale_price": price,
             #"stock_quantity": 70,
-            "in_stock": True,
+            "in_stock": inStock,
+            # cat props id, name, slug
             "categories": [
-                {
-                    "id": 204,
-                    "name": "فلاتر زيت",
-                    "slug": "falatr-zait"
-                }
-            ],
+                {"id": "0", "name": c.sub_category_1 or c.category_name, "slug": "asd"} 
+                for c in product_categories],
             "tags": [
                 {
                     "id": 664,
@@ -206,26 +213,6 @@ def products():
                     "value": "0"
                 },
                 {
-                    "id": 22271,
-                    "key": "_yoast_wpseo_primary_product_cat",
-                    "value": "204"
-                },
-                {
-                    "id": 22272,
-                    "key": "_yoast_wpseo_content_score",
-                    "value": "30"
-                },
-                {
-                    "id": 22273,
-                    "key": "_yoast_wpseo_estimated-reading-time-minutes",
-                    "value": ""
-                },
-                {
-                    "id": 22274,
-                    "key": "_yoast_wpseo_primary_product_brand",
-                    "value": "660"
-                },
-                {
                     "id": 22275,
                     "key": "post_views_count",
                     "value": "94"
@@ -247,5 +234,4 @@ def products():
                 }
                 ]
         })
-    print(products)
-    return products
+    return products_list
