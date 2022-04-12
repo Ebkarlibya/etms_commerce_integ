@@ -6,16 +6,16 @@ from frappe.desk.treeview import get_children
 def categories():
     frappe.get_all("Item", filters={})
     categories = []
-    eci_cats = frappe.get_all("ECI Category",
+    eci_categories = frappe.get_all("ECI Category",
         fields=["category_image", "category_name", "parent_eci_category"])
 
-    for cat in eci_cats:
+    for cat in eci_categories:
         # count items under this category
-        count = frappe.db.sql(f"""
-            select count(name) from `tabECI Categories Table`
-            where category_name = '{cat.category_name}' 
-            or sub_category_1 = '{cat.category_name}'
-        """)
+        # count = frappe.db.sql(f"""
+        #     select count(name) from `tabECI Categories Table`
+        #     where category_name = '{cat.category_name}' 
+        #     or sub_category_1 = '{cat.category_name}'
+        # """)
         # flutter parent must be "0"
         parent = cat.parent_eci_category
         if not cat.parent_eci_category:
@@ -34,7 +34,7 @@ def categories():
             "description": cat.category_description,
             "image": {"src": category_image_url},
             "parent": parent,
-            "count": count[0][0]
+            "count": 0
         })
     return categories
 
@@ -48,7 +48,7 @@ def products():
     )
 
     # get related product/s
-    prod_filters = {}
+    prod_filters = {"publish_to_commerce_app": 1}
     products_list = []
 
     if "id" in query_params:

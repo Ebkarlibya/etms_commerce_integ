@@ -147,30 +147,24 @@ app_license = "MIT"
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
-
 # User Data Protection
 # --------------------
 
-user_data_fields = [
-	{
-		"doctype": "{doctype_1}",
-		"filter_by": "{filter_by}",
-		"redact_fields": ["{field_1}", "{field_2}"],
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_2}",
-		"filter_by": "{filter_by}",
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_3}",
-		"strict": False,
-	},
-	{
-		"doctype": "{doctype_4}"
-	}
-]
+user_data_fields = [{
+    "doctype": "{doctype_1}",
+    "filter_by": "{filter_by}",
+    "redact_fields": ["{field_1}", "{field_2}"],
+    "partial": 1,
+}, {
+    "doctype": "{doctype_2}",
+    "filter_by": "{filter_by}",
+    "partial": 1,
+}, {
+    "doctype": "{doctype_3}",
+    "strict": False,
+}, {
+    "doctype": "{doctype_4}"
+}]
 
 # Authentication and authorization
 # --------------------------------
@@ -186,3 +180,13 @@ user_data_fields = [
 # Recommended only for DocTypes which have limited documents with untranslated names
 # For example: Role, Gender, etc.
 # translated_search_doctypes = []
+
+fixtures = [{
+    "doctype":
+    "Custom Field",
+    "filters": [[
+        "fieldname", "in",
+        ("eci_product_section", "publish_to_commerce_app", "eci_categories",
+         "eci_product_images")
+    ]]
+}]
