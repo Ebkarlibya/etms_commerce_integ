@@ -41,9 +41,21 @@ def categories():
 
 @frappe.whitelist(allow_guest=True)
 def products():
+    # extract query params
+    query_params = dict(
+        q.split("=")
+        for q in frappe.request.query_string.decode("utf-8").split("&")
+    )
+
+    # get related product/s
+    prod_filters = {}
     products_list = []
+
+    if "id" in query_params:
+        prod_filters["item_code"] = query_params["id"]
     eci_products = frappe.get_all("Item",
-        fields=["item_code", "item_name", "description"])
+        fields=["item_code", "item_name", "description"],
+        filters=prod_filters)
 
     for prod in eci_products:
         # get product price
@@ -57,10 +69,17 @@ def products():
             filters={"item_code": prod.item_code
         })[0]["actual_qty"]
         inStock = True if actual_qty >= 1 else False
+
         # get product categories
         product_categories = frappe.get_all("ECI Categories Table",
                               fields=["category_name", "sub_category_1"],
                               filters={"parent": prod.item_code})
+        # get product images
+        product_images = frappe.get_all("ECI Product Images Table",
+                                        fields=["product_image", "image_title"],
+                                        filters={"parent": prod.item_code})
+        # product_image_url = "http://192.168.1.155:8000" + prod.category_image
+        #category_image_url = get_url() + cat.category_image
 
         products_list.append({
             "id": prod.item_code,
@@ -80,50 +99,30 @@ def products():
             "in_stock": inStock,
             # cat props id, name, slug
             "categories": [
-                {"id": "0", "name": c.sub_category_1 or c.category_name, "slug": "asd"} 
+                {"id": "0", "name": c.sub_category_1 or c.category_name, "slug": "asd"}
                 for c in product_categories],
             "tags": [
-                {
-                    "id": 664,
-                    "name": "فلتر زيت افانتي",
-                    "slug": "falatir-zait-avanti"
-                }
+                # {
+                #     "id": 664,
+                #     "name": "فلتر زيت افانتي",
+                #     "slug": "falatir-zait-avanti"
+                # }
             ],
             "images": [
                 {
-                    "id": 7154,
-                    "date_created": "2021-08-17T12:45:22",
-                    "date_created_gmt": "2021-08-17T12:45:22",
-                    "date_modified": "2021-08-17T12:45:22",
-                    "date_modified_gmt": "2021-08-17T12:45:22",
-                    "src": "https://torous.ly/wp-content/uploads/2021/08/71C1tBnZ8L._AC_SL1500_.jpg",
-                    "name": "71C+1tBnZ8L._AC_SL1500_",
-                    "alt": "",
-                    "position": 0
-                },
-                {
-                    "id": 7153,
-                    "date_created": "2021-08-17T12:45:18",
-                    "date_created_gmt": "2021-08-17T12:45:18",
-                    "date_modified": "2021-08-17T12:45:18",
-                    "date_modified_gmt": "2021-08-17T12:45:18",
-                    "src": "https://torous.ly/wp-content/uploads/2021/08/812cDxiQdyL._AC_SL1500_.jpg",
-                    "name": "812cDxiQdyL._AC_SL1500_",
-                    "alt": "",
-                    "position": 1
-                },
-                {
-                    "id": 7155,
-                    "date_created": "2021-08-17T13:06:08",
-                    "date_created_gmt": "2021-08-17T13:06:08",
-                    "date_modified": "2021-08-17T13:06:08",
-                    "date_modified_gmt": "2021-08-17T13:06:08",
-                    "src": "https://torous.ly/wp-content/uploads/2021/08/07c87bd5c5edb01ca56184a898155f68.jpg",
-                    "name": "07c87bd5c5edb01ca56184a898155f68",
-                    "alt": "",
-                    "position": 2
+                    # "id": 7154,
+                    # "date_created": "2021-08-17T12:45:22",
+                    # "date_created_gmt": "2021-08-17T12:45:22",
+                    # "date_modified": "2021-08-17T12:45:22",
+                    # "date_modified_gmt": "2021-08-17T12:45:22",
+                    "src": "http://192.168.1.155:8000" + pi.product_image,
+                    "name": pi.product_image,
+                    # "alt": "",
+                    # "position": 0
                 }
+                for pi in product_images 
             ],
+            "variations": [],
             "attributes": [
                 {
                     "id": 3,

@@ -22,12 +22,14 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Category Name",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "category_image",
    "fieldtype": "Attach Image",
-   "label": "Category Image"
+   "label": "Category Image",
+   "reqd": 1
   },
   {
    "fieldname": "category_description",
@@ -51,7 +53,7 @@
    "read_only": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_group",
    "fieldtype": "Check",
    "label": "Is Group"
@@ -72,7 +74,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2022-04-11 16:12:03.128001",
+ "modified": "2022-04-12 08:34:16.825790",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Category",
