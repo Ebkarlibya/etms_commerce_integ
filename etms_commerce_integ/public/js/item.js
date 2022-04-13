@@ -12,4 +12,17 @@ frappe.ui.form.on("Item", {
             }
         });
     }
-})
+});
+
+frappe.ui.form.on("ECI Product Images Table", {
+    refresh: function() {
+        console.log('ECI Product Images Table ref');
+    },
+    image_title_add: function() {
+        console.log('row add');
+    },
+    image_title: function() {
+        console.log('set row');
+    }
+});
+

@@ -48,7 +48,6 @@ def products():
     )
 
     # get related product/s
-    prod_filters = {"publish_to_commerce_app": 1}
     products_list = []
     eci_products = []
     # filters
@@ -82,7 +81,7 @@ def products():
         # get product price
         price = frappe.get_all("Item Price",
             fields=["price_list_rate"],
-            filters={"item_code": prod.item_code},
+            filters={"price_list": prod.commerce_app_price_list or "Standard Selling", "item_code": prod.item_code},
             order_by="valid_from desc")[0]["price_list_rate"]
 
         # is the product available in stock
