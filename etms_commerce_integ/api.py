@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils import get_url
 from frappe.desk.treeview import get_children
+from urllib.parse import unquote
 
 @frappe.whitelist(allow_guest=True)
 def categories():
@@ -38,7 +39,6 @@ def categories():
         })
     return categories
 
-
 @frappe.whitelist(allow_guest=True)
 def products():
     # extract query params
@@ -50,12 +50,33 @@ def products():
     # get related product/s
     prod_filters = {"publish_to_commerce_app": 1}
     products_list = []
-
+    eci_products = []
+    # filters
     if "id" in query_params:
-        prod_filters["item_code"] = query_params["id"]
-    eci_products = frappe.get_all("Item",
-        fields=["item_code", "item_name", "description"],
-        filters=prod_filters)
+        eci_products = frappe.db.sql(f"""
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition
+            from `tabItem` i
+            where i.publish_to_commerce_app = 1
+            and i.item_code = '{query_params['id']}'
+            ;
+        """, as_dict=True)
+    elif "category" in query_params:
+        decoded_cat = unquote(query_params["category"])
+        eci_products = frappe.db.sql(f"""
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition, c.category_name, c.sub_category_1
+            from `tabItem` i inner join `tabECI Categories Table` c
+            ON i.item_code = c.parent
+            where i.publish_to_commerce_app = 1
+            and c.category_name='{decoded_cat}' or c.sub_category_1='{decoded_cat}';
+            ;
+        """, as_dict=True)
+    else:
+        eci_products = frappe.db.sql(f"""
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition
+            from `tabItem` i
+            where i.publish_to_commerce_app = 1
+            ;
+        """, as_dict=True)
 
     for prod in eci_products:
         # get product price
@@ -63,6 +84,7 @@ def products():
             fields=["price_list_rate"],
             filters={"item_code": prod.item_code},
             order_by="valid_from desc")[0]["price_list_rate"]
+
         # is the product available in stock
         actual_qty = frappe.get_all("Bin",
             fields=["actual_qty"],
@@ -71,20 +93,28 @@ def products():
         inStock = True if actual_qty >= 1 else False
 
         # get product categories
-        product_categories = frappe.get_all("ECI Categories Table",
+        _product_categories = frappe.get_all("ECI Categories Table",
                               fields=["category_name", "sub_category_1"],
                               filters={"parent": prod.item_code})
+
+        product_categories = []
+        for prod_cat in _product_categories:
+            if prod_cat.category_name:
+                product_categories.append(
+                    {"id": prod_cat.category_name, "name": prod_cat.category_name, "slug": prod_cat.category_name}
+                )
+            if prod_cat.sub_category_1:
+                product_categories.append(
+                    {"id": prod_cat.sub_category_1, "name": prod_cat.sub_category_1, "slug": prod_cat.sub_category_1}
+                )
+
         # get product images
         product_images = frappe.get_all("ECI Product Images Table",
                                         fields=["product_image", "image_title"],
                                         filters={"parent": prod.item_code})
         # product_image_url = "http://192.168.1.155:8000" + prod.category_image
         #category_image_url = get_url() + cat.category_image
-        
-        # get product condition
-        eci_prooduct_condition = frappe.get_all("Item", 
-                                    fields=["eci_prooduct_condition"],
-                                    filters={"item_code": prod.item_code})
+
         products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
@@ -101,10 +131,8 @@ def products():
             "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
-            "condition": eci_prooduct_condition[0]["eci_prooduct_condition"],
-            "categories": [
-                {"id": "0", "name": c.sub_category_1 or c.category_name, "slug": "asd"}
-                for c in product_categories],
+            "condition": prod.eci_prooduct_condition,
+            "categories": product_categories,
             "tags": [
                 # {
                 #     "id": 664,
