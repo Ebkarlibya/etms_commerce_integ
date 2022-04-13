@@ -186,7 +186,7 @@ fixtures = [{
     "Custom Field",
     "filters": [[
         "fieldname", "in",
-        ("eci_product_section", "publish_to_commerce_app", "eci_categories",
+        ("eci_product_section", "publish_to_commerce_app", "eci_prooduct_condition", "eci_categories",
          "eci_product_images")
     ]]
 }]

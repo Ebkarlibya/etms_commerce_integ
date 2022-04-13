@@ -80,7 +80,11 @@ def products():
                                         filters={"parent": prod.item_code})
         # product_image_url = "http://192.168.1.155:8000" + prod.category_image
         #category_image_url = get_url() + cat.category_image
-
+        
+        # get product condition
+        eci_prooduct_condition = frappe.get_all("Item", 
+                                    fields=["eci_prooduct_condition"],
+                                    filters={"item_code": prod.item_code})
         products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
@@ -97,7 +101,7 @@ def products():
             "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
-            # cat props id, name, slug
+            "condition": eci_prooduct_condition[0]["eci_prooduct_condition"],
             "categories": [
                 {"id": "0", "name": c.sub_category_1 or c.category_name, "slug": "asd"}
                 for c in product_categories],
