@@ -31,7 +31,11 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Item" : "public/js/item.js"}
+doctype_js = {
+    "Item" : "public/js/item.js",
+    "ECI Vehicle Make": "public/js/eci_vehicle_make.js",
+    "ECI Vehicle Model": "public/js/eci_vehicle_model.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -186,7 +190,7 @@ fixtures = [{
     "Custom Field",
     "filters": [[
         "fieldname", "in",
-        ("eci_product_section", "publish_to_commerce_app", "eci_prooduct_condition", "eci_categories",
-         "eci_product_images")
+        ("eci_product_section", "publish_to_commerce_app", "eci_product_condition", "commerce_app_price_list",
+        "eci_categories", "eci_product_images", "has_specific_compatibility", "eci_vehicle_compatibility")
     ]]
 }]

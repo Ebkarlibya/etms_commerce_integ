@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-04-14 06:54:45.488262",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle_make",
+  "vehicle_model",
+  "vehicle_year"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle_make",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle Make",
+   "options": "ECI Vehicle Make"
+  },
+  {
+   "fieldname": "vehicle_model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle Model",
+   "options": "ECI Vehicle Model"
+  },
+  {
+   "fieldname": "vehicle_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle Year",
+   "options": "ECI Vehicle Year"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-04-14 07:15:48.850789",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Vehicle Compatibility Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

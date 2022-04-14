@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:model",
+ "creation": "2022-04-14 06:41:08.179680",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parent_compat",
+  "model"
+ ],
+ "fields": [
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "unique": 1
+  },
+  {
+   "fieldname": "parent_compat",
+   "fieldtype": "Link",
+   "label": "Parent Compat",
+   "options": "ECI Vehicle Make"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-04-14 08:19:00.443940",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Vehicle Model",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

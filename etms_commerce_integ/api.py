@@ -53,7 +53,8 @@ def products():
     # filters
     if "id" in query_params:
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            i.has_specific_compatibility
             from `tabItem` i
             where i.publish_to_commerce_app = 1
             and i.item_code = '{query_params['id']}'
@@ -62,7 +63,8 @@ def products():
     elif "category" in query_params:
         decoded_cat = unquote(query_params["category"])
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition, c.category_name, c.sub_category_1
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            i.has_specific_compatibility, c.category_name,c.sub_category_1
             from `tabItem` i inner join `tabECI Categories Table` c
             ON i.item_code = c.parent
             where i.publish_to_commerce_app = 1
@@ -71,7 +73,8 @@ def products():
         """, as_dict=True)
     else:
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition
+            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            i.has_specific_compatibility
             from `tabItem` i
             where i.publish_to_commerce_app = 1
             ;
@@ -114,6 +117,15 @@ def products():
         # product_image_url = "http://192.168.1.155:8000" + prod.category_image
         #category_image_url = get_url() + cat.category_image
 
+        # get product vehicle compatibility
+        vehicleCompatsList = []
+        if prod.has_specific_compatibility == 1:
+            vehicleCompatsList = frappe.db.sql(f"""
+                select vehicle_make, vehicle_model, vehicle_year
+                from `tabECI Vehicle Compatibility Table`
+                where parent='{prod.item_code}';
+                """, as_dict=True)
+
         products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
@@ -132,6 +144,7 @@ def products():
             "in_stock": inStock,
             "condition": prod.eci_prooduct_condition,
             "categories": product_categories,
+            "vehicleCompatsList": vehicleCompatsList,
             "tags": [
                 # {
                 #     "id": 664,
