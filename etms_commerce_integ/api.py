@@ -81,6 +81,19 @@ def products():
         """, as_dict=True)
 
     for prod in eci_products:
+        # if product not in publish warehouses skip
+        product_warehouses = frappe.db.sql(f"""
+            select warehouse, actual_qty
+            from `tabBin` where item_code = '{prod.item_code}'
+            and warehouse in (
+                select warehouse
+                from `tabECI Publish Warehouses Table`
+                where parent='{prod.item_code}'
+                )
+            """, as_dict=True)
+        # if len(product_warehouses) < 1:
+        #     continue
+
         # get product price
         price = frappe.get_all("Item Price",
             fields=["price_list_rate"],
@@ -88,10 +101,9 @@ def products():
             order_by="valid_from desc")[0]["price_list_rate"]
 
         # is the product available in stock
-        actual_qty = frappe.get_all("Bin",
-            fields=["actual_qty"],
-            filters={"item_code": prod.item_code
-        })[0]["actual_qty"]
+        actual_qty = 0
+        for item in product_warehouses:
+            actual_qty += item["actual_qty"] # sum qty in all eci published warehouses
         inStock = True if actual_qty >= 1 else False
 
         # get product categories
