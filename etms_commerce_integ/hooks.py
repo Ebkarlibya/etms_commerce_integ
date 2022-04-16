@@ -190,7 +190,14 @@ fixtures = [{
     "Custom Field",
     "filters": [[
         "fieldname", "in",
-        ("eci_product_section", "publish_to_commerce_app", "eci_product_condition", "commerce_app_price_list",
-        "eci_categories", "eci_product_images", "has_specific_compatibility", "eci_vehicle_compatibility")
+        ("eci_product_section",
+        "publish_to_commerce_app",
+        "eci_is_product_used",
+        "commerce_app_price_list",
+        "warehouses_to_check_item_availability",
+        "eci_categories",
+        "eci_product_images",
+        "has_specific_compatibility",
+        "eci_vehicle_compatibility")
     ]]
 }]

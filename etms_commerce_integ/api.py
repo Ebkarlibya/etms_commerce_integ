@@ -53,7 +53,7 @@ def products():
     # filters
     if "id" in query_params:
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used,
             i.has_specific_compatibility
             from `tabItem` i
             where i.publish_to_commerce_app = 1
@@ -63,7 +63,7 @@ def products():
     elif "category" in query_params:
         decoded_cat = unquote(query_params["category"])
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used,
             i.has_specific_compatibility, c.category_name,c.sub_category_1
             from `tabItem` i inner join `tabECI Categories Table` c
             ON i.item_code = c.parent
@@ -73,7 +73,7 @@ def products():
         """, as_dict=True)
     else:
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_prooduct_condition,
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used,
             i.has_specific_compatibility
             from `tabItem` i
             where i.publish_to_commerce_app = 1
@@ -137,7 +137,7 @@ def products():
                 from `tabECI Vehicle Compatibility Table`
                 where parent='{prod.item_code}';
                 """, as_dict=True)
-
+        print(prod.eci_is_product_used)
         products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
@@ -154,7 +154,7 @@ def products():
             "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
-            "condition": prod.eci_prooduct_condition,
+            "condition": str(prod.eci_is_product_used),
             "categories": product_categories,
             "vehicleCompatsList": vehicleCompatsList,
             "tags": [
