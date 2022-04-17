@@ -1,6 +1,6 @@
 ## Etms Commerce Integ
 
-Integration For ERPNext
+ETMS Integration App
 
 #### License
 
