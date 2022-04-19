@@ -4,10 +4,6 @@ from etms_commerce_integ.auth import eci_verify_request
 @frappe.whitelist(allow_guest=False)
 @eci_verify_request
 def update_user_profile(first_name, last_name, shipping_address_1, shipping_city, shipping_country):
-# "{"first_name":"imad","last_name":"abdou","shipping_address_1":"tripoli near ....",
-# "shipping_city":"tripoli","shipping_country":"ليبيا"}"
-
-    # frappe.only_for("Customer")
     user = frappe.get_doc("User", frappe.session.user)
 
     user.first_name = first_name 

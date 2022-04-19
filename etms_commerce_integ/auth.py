@@ -83,11 +83,6 @@ def sign_up(username, new_password, first_name, last_name, phone_number):
     frappe.set_user("administrator")
     if frappe.get_value("ECI Commerce Settings", fieldname="allow_new_users_registrations") == 0:
         return {"message": "new_registrations_disabled"}
-    # username = frappe.form_dict["username"]
-    # first_name = frappe.form_dict["first_name"]
-    # last_name = frappe.form_dict["last_name"]
-    # new_password = frappe.form_dict["new_password"]
-    # phone_number = frappe.form_dict["phone_number"]
 
     user_exist = frappe.db.get("User", username)
 
@@ -120,7 +115,7 @@ def sign_up(username, new_password, first_name, last_name, phone_number):
     user.api_secret = api_secret
 
     user.insert()
-    user.add_roles("Customer")
+    # user.add_roles("Customer")
 
     customer = frappe.get_doc({
         "doctype": "Customer",
