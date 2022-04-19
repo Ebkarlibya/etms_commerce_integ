@@ -14,17 +14,18 @@ def eci_verify_request(func):
         if eci_settings.enabled == 0:
             return {"message": "services_disabled"}
         try:
+            func_res = func()
             API_KEY = headers["Consumer-Key"]
             API_SECRET = headers["Consumer-Secret"]
 
             if API_KEY != eci_settings.api_key or API_SECRET != eci_settings.get_password(
                     "api_secret"):
                     return {"message": "not_authorized"}
-            del kwargs['cmd']
-            return func(*args, **kwargs)
+            # del kwargs['cmd']
+            return func_res
 
         except Exception as e:
-            raise e
+            print(e)
             return {"message": "not_authorized"}
 
     return wrapper
@@ -63,7 +64,9 @@ def user_info():
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
-def login(usr, pwd, seconds):
+def login():
+    usr = frappe.form_dict["usr"]
+    pwd = frappe.form_dict["pwd"]
 
     if usr and pwd:
         _user = User.find_by_credentials(usr, pwd)
@@ -79,10 +82,15 @@ def login(usr, pwd, seconds):
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-def sign_up(username, new_password, first_name, last_name, phone_number):
-    frappe.set_user("administrator")
+def sign_up():
     if frappe.get_value("ECI Commerce Settings", fieldname="allow_new_users_registrations") == 0:
         return {"message": "new_registrations_disabled"}
+
+    username = frappe.form_dict["username"]
+    new_password = frappe.form_dict["new_password"]
+    first_name = frappe.form_dict["first_name"]
+    last_name = frappe.form_dict["username"]
+    phone_number = frappe.form_dict["phone_number"]
 
     user_exist = frappe.db.get("User", username)
 
@@ -104,8 +112,6 @@ def sign_up(username, new_password, first_name, last_name, phone_number):
         "last_name": last_name,
         "user_type": "Website User"
     })
-    user.flags.ignore_permissions = True
-    user.flags.ignore_password_policy = True
 
     # Generate api keys
     api_secret = frappe.generate_hash(length=15)
@@ -114,9 +120,13 @@ def sign_up(username, new_password, first_name, last_name, phone_number):
     user.api_key = api_key
     user.api_secret = api_secret
 
+    user.flags.ignore_permissions = True
+    user.flags.ignore_password_policy = True
+    
     user.insert()
     # user.add_roles("Customer")
 
+    frappe.set_user("administrator")
     customer = frappe.get_doc({
         "doctype": "Customer",
         "account_manager": user.name,
@@ -129,6 +139,6 @@ def sign_up(username, new_password, first_name, last_name, phone_number):
 
     customer.flags.ignore_mandatory = True
     customer.flags.ignore_permissions = True
-    customer.insert()
+    customer.insert(ignore_permissions=True)
 
     return {"user": user.name, "api_key": api_key, "api_secret": api_secret}
