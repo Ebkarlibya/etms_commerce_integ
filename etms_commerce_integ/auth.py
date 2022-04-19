@@ -1,22 +1,47 @@
-import email
+from ast import arg
+from functools import wraps
 import frappe
 from frappe.core.doctype.user.user import generate_keys
 from frappe.core.doctype.user.user import User
+from pandas import read_html
 
 
-@frappe.whitelist(allow_guest=False)
+def eci_verify_request(func):
+
+    def wrapper(*args, **kwargs):
+        headers = frappe.request.headers
+        eci_settings = frappe.get_single("ECI Commerce Settings")
+        if eci_settings.enabled == 0:
+            return {"message": "services_disabled"}
+        try:
+            API_KEY = headers["Consumer-Key"]
+            API_SECRET = headers["Consumer-Secret"]
+
+            if API_KEY != eci_settings.api_key or API_SECRET != eci_settings.get_password(
+                    "api_secret"):
+                    return {"message": "not_authorized"}
+            del kwargs['cmd']
+            return func(*args, **kwargs)
+
+        except Exception as e:
+            raise e
+            return {"message": "not_authorized"}
+
+    return wrapper
+
+
+@frappe.whitelist(allow_guest=False, methods=["GET"])
+@eci_verify_request
 def user_info():
-    frappe.only_for("Customer")
     user = frappe.get_doc("User", frappe.session.user)
 
     address_line1 = frappe.db.get_value(
         "Address",
         filters={"name": f"{user.name}-Shipping"},
         fieldname="address_line1")
-    city = frappe.db.get_value(
-        "Address",
-        filters={"name": f"{user.name}-Shipping"},
-        fieldname="city")
+    city = frappe.db.get_value("Address",
+                               filters={"name": f"{user.name}-Shipping"},
+                               fieldname="city")
     info = {
         "id": user.name,
         "name": user.name,
@@ -36,10 +61,10 @@ def user_info():
     return info
 
 
-@frappe.whitelist(allow_guest=True)
-def login():
-    usr = frappe.form_dict.get("usr")
-    pwd = frappe.form_dict.get("pwd")
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@eci_verify_request
+def login(usr, pwd, seconds):
+
     if usr and pwd:
         _user = User.find_by_credentials(usr, pwd)
         user = frappe.get_doc("User", _user.name)
@@ -56,6 +81,14 @@ def login():
 @frappe.whitelist(allow_guest=True, methods=["POST"])
 def sign_up(username, new_password, first_name, last_name, phone_number):
     frappe.set_user("administrator")
+    if frappe.get_value("ECI Commerce Settings", fieldname="allow_new_users_registrations") == 0:
+        return {"message": "new_registrations_disabled"}
+    # username = frappe.form_dict["username"]
+    # first_name = frappe.form_dict["first_name"]
+    # last_name = frappe.form_dict["last_name"]
+    # new_password = frappe.form_dict["new_password"]
+    # phone_number = frappe.form_dict["phone_number"]
+
     user_exist = frappe.db.get("User", username)
 
     if user_exist:

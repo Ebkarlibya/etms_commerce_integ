@@ -1,12 +1,13 @@
 import frappe
+from etms_commerce_integ.auth import eci_verify_request
 
 @frappe.whitelist(allow_guest=False)
+@eci_verify_request
 def update_user_profile(first_name, last_name, shipping_address_1, shipping_city, shipping_country):
 # "{"first_name":"imad","last_name":"abdou","shipping_address_1":"tripoli near ....",
 # "shipping_city":"tripoli","shipping_country":"ليبيا"}"
 
-    frappe.only_for("Customer")
-    
+    # frappe.only_for("Customer")
     user = frappe.get_doc("User", frappe.session.user)
 
     user.first_name = first_name 
@@ -25,13 +26,17 @@ def update_user_profile(first_name, last_name, shipping_address_1, shipping_city
             "email_id": user.email,
             "phone": user.mobile_no
         })
+        new_address.flags.ignore_mandatory = True
+        new_address.flags.ignore_permissions = True
         new_address.insert()
+        address = new_address
     else:
         address = frappe.get_doc("Address", f"{user.name}-Shipping")
         address.address_line1 = shipping_address_1
         address.city = shipping_city
         address.country = "Libya"
         address.flags.ignore_mandatory = True
+        address.flags.ignore_permissions = True
         address.save()
     return {
         "id": user.name,
@@ -48,15 +53,3 @@ def update_user_profile(first_name, last_name, shipping_address_1, shipping_city
         "city": address.city,
         "message": "profile_updated"
     }
-
-    #       id = json['id'].toString();
-    #   name = json['displayname'];
-    #   username = json['username'];
-    #   firstName = json['firstname'];
-    #   lastName = json['lastname'];
-    #   email = json['email'];
-    #   picture = json['avatar'];
-    #   nicename = json['nicename'];
-    #   userUrl = json['url'];
-    #   loggedIn = true;
-    #   var roles = json['roles'] as List;

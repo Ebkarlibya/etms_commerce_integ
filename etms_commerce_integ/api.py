@@ -2,8 +2,10 @@ import frappe
 from frappe.utils import get_url
 from frappe.desk.treeview import get_children
 from urllib.parse import unquote
+from etms_commerce_integ.auth import eci_verify_request
 
 @frappe.whitelist(allow_guest=True)
+@eci_verify_request
 def categories():
     frappe.get_all("Item", filters={})
     categories = []
@@ -40,6 +42,7 @@ def categories():
     return categories
 
 @frappe.whitelist(allow_guest=True)
+@eci_verify_request
 def products():
     # extract query params
     query_params = dict(
