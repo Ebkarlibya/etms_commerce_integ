@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-04-19 17:39:11.620022",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "part_make",
+  "part_model",
+  "column_break_3",
+  "part_year",
+  "part_status",
+  "section_break_6",
+  "part_description",
+  "column_break_8",
+  "requested_by",
+  "requester_phone",
+  "requester_email"
+ ],
+ "fields": [
+  {
+   "fieldname": "part_make",
+   "fieldtype": "Data",
+   "label": "Part Make"
+  },
+  {
+   "fieldname": "part_model",
+   "fieldtype": "Data",
+   "label": "Part Model"
+  },
+  {
+   "fieldname": "part_year",
+   "fieldtype": "Data",
+   "label": "Part Year"
+  },
+  {
+   "default": "New",
+   "fieldname": "part_status",
+   "fieldtype": "Select",
+   "label": "Part Status",
+   "options": "New\nUsed\nAny"
+  },
+  {
+   "fieldname": "requester_phone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requester Phone"
+  },
+  {
+   "fieldname": "requester_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requester Email"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "part_description",
+   "fieldtype": "Small Text",
+   "label": "Part Description"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "User"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-04-20 17:35:52.754914",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Parts Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

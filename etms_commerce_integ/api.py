@@ -4,6 +4,80 @@ from frappe.desk.treeview import get_children
 from urllib.parse import unquote
 from etms_commerce_integ.auth import eci_verify_request
 
+@frappe.whitelist(allow_guest=False)
+@eci_verify_request
+def upload_file():
+    files = frappe.request.files
+    is_private = False #frappe.form_dict.is_private
+    doctype = "ECI Parts Request" #frappe.form_dict.doctype
+    docname = frappe.form_dict.request_name #frappe.form_dict.docname
+    fieldname = "" #frappe.form_dict.fieldname
+    file_url = "" #frappe.form_dict.file_url
+    folder = "Home" #frappe.form_dict.folder or 'Home'
+    filename = frappe.form_dict.file_name
+    content = None
+
+    if 'file' in files:
+        file = files['file']
+        content = file.stream.read()
+        filename = file.filename
+
+    frappe.local.uploaded_file = content
+    frappe.local.uploaded_filename = filename
+
+    import mimetypes
+    filetype = mimetypes.guess_type(filename)[0]
+    if filetype not in ('image/png', 'image/jpeg'):
+        return {"message": "file_format_not_allowed"}
+
+    ret = frappe.get_doc({
+        "doctype": "File",
+        "attached_to_doctype": doctype,
+        "attached_to_name": docname,
+        "attached_to_field": fieldname,
+        "folder": folder,
+        "file_name": filename,
+        "file_url": file_url,
+        "is_private": is_private,
+        "content": content
+    })
+    ret.save(ignore_permissions=True)
+    return {"message": "file_uploaded_successfully"}
+
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@eci_verify_request
+def request_part():
+    part_make = frappe.form_dict["part_make"]
+    part_model = frappe.form_dict["part_model"]
+    part_year = frappe.form_dict["part_year"]
+    part_status = frappe.form_dict["part_status"]
+    part_description = frappe.form_dict["part_description"]
+    requester_phone = frappe.form_dict["requester_phone"]
+    requester_email = frappe.form_dict["requester_email"]
+    if part_status == 1:
+        part_status = "New"
+    elif part_status == 2:
+        part_status = "Used"
+    else:
+        part_status = "Any"
+
+    part_request = frappe.get_doc({
+        "doctype": "ECI Parts Request",
+        "part_make": part_make,
+        "part_model": part_model,
+        "part_year": part_year,
+        "part_status": part_status,
+        "part_description": part_description,
+        "requested_by": frappe.session.user,
+        "requester_phone": requester_phone,
+        "requester_email": requester_email
+    })
+
+    part_request.insert()
+    # request_rejected
+    return {"message": "request_accepted", "request_name": part_request.name}
+
+
 @frappe.whitelist(allow_guest=True)
 @eci_verify_request
 def categories():

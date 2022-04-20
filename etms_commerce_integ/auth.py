@@ -89,7 +89,7 @@ def sign_up():
     username = frappe.form_dict["username"]
     new_password = frappe.form_dict["new_password"]
     first_name = frappe.form_dict["first_name"]
-    last_name = frappe.form_dict["username"]
+    last_name = frappe.form_dict["last_name"]
     phone_number = frappe.form_dict["phone_number"]
 
     user_exist = frappe.db.get("User", username)
