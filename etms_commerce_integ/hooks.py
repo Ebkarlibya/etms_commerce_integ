@@ -34,7 +34,8 @@ app_license = "MIT"
 doctype_js = {
     "Item" : "public/js/item.js",
     "ECI Vehicle Make": "public/js/eci_vehicle_make.js",
-    "ECI Vehicle Model": "public/js/eci_vehicle_model.js"
+    "ECI Vehicle Model": "public/js/eci_vehicle_model.js",
+    # "ECI Parts Request": "public/js/eci_parts_request.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}

@@ -53,7 +53,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-04-19 06:44:17.106507",
+ "modified": "2022-04-20 18:35:49.506233",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",
@@ -82,9 +82,16 @@
   {
    "color": "#B4CD29",
    "doc_view": "",
-   "icon": "settings",
+   "icon": "file",
    "label": "ECI Commerce Settings",
    "link_to": "ECI Commerce Settings",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "icon": "file",
+   "label": "Parts Request",
+   "link_to": "ECI Parts Request",
    "type": "DocType"
   }
  ],
