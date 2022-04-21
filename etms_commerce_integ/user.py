@@ -26,7 +26,13 @@ def update_user_profile():
             "city": shipping_city,
             "country": "Libya",
             "email_id": user.email,
-            "phone": user.mobile_no
+            "phone": user.mobile_no,
+            "links": [
+                {
+                    "link_doctype": "Customer",
+                    "link_name": user.name
+                }
+            ]
         })
         new_address.flags.ignore_mandatory = True
         new_address.flags.ignore_permissions = True

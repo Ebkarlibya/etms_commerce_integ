@@ -52,13 +52,12 @@ def request_part():
     part_year = frappe.form_dict["part_year"]
     part_status = frappe.form_dict["part_status"]
     part_description = frappe.form_dict["part_description"]
-    requester_phone = frappe.form_dict["requester_phone"]
-    requester_email = frappe.form_dict["requester_email"]
-    if part_status == 1:
+
+    if part_status == '1':
         part_status = "New"
-    elif part_status == 2:
+    elif part_status == '2':
         part_status = "Used"
-    else:
+    elif part_status == '3':
         part_status = "Any"
 
     part_request = frappe.get_doc({
@@ -68,9 +67,7 @@ def request_part():
         "part_year": part_year,
         "part_status": part_status,
         "part_description": part_description,
-        "requested_by": frappe.session.user,
-        "requester_phone": requester_phone,
-        "requester_email": requester_email
+        "requested_by": frappe.session.user
     })
 
     part_request.insert()

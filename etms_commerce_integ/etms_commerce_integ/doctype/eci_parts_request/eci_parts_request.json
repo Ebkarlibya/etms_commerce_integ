@@ -14,14 +14,13 @@
   "section_break_6",
   "part_description",
   "column_break_8",
-  "requested_by",
-  "requester_phone",
-  "requester_email"
+  "requested_by"
  ],
  "fields": [
   {
    "fieldname": "part_make",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Part Make"
   },
   {
@@ -40,18 +39,6 @@
    "fieldtype": "Select",
    "label": "Part Status",
    "options": "New\nUsed\nAny"
-  },
-  {
-   "fieldname": "requester_phone",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Requester Phone"
-  },
-  {
-   "fieldname": "requester_email",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Requester Email"
   },
   {
    "fieldname": "column_break_3",
@@ -73,13 +60,14 @@
   {
    "fieldname": "requested_by",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Requested By",
    "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-20 18:31:45.151337",
+ "modified": "2022-04-21 13:02:22.592225",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Parts Request",
