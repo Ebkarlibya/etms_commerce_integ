@@ -20,19 +20,22 @@
  "fields": [
   {
    "fieldname": "part_make",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Part Make"
+   "label": "Part Make",
+   "options": "ECI Vehicle Make"
   },
   {
    "fieldname": "part_model",
-   "fieldtype": "Data",
-   "label": "Part Model"
+   "fieldtype": "Link",
+   "label": "Part Model",
+   "options": "ECI Vehicle Model"
   },
   {
    "fieldname": "part_year",
-   "fieldtype": "Data",
-   "label": "Part Year"
+   "fieldtype": "Link",
+   "label": "Part Year",
+   "options": "ECI Vehicle Year"
   },
   {
    "default": "New",
@@ -68,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-22 09:09:01.057286",
+ "modified": "2022-04-23 10:16:58.361763",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Parts Request",
