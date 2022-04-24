@@ -28,8 +28,7 @@
   {
    "fieldname": "category_image",
    "fieldtype": "Attach Image",
-   "label": "Category Image",
-   "reqd": 1
+   "label": "Category Image"
   },
   {
    "fieldname": "category_description",
@@ -74,7 +73,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2022-04-12 08:34:16.825790",
+ "modified": "2022-04-24 11:22:44.205169",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Category",

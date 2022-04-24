@@ -132,18 +132,36 @@ def products():
             from `tabItem` i
             where i.publish_to_commerce_app = 1
             and i.item_code = '{query_params['id']}'
-            ;
+        """, as_dict=True)
+    elif "search" in query_params and "category" in query_params:
+        decoded_search = unquote(query_params["search"])
+        decoded_cat = unquote(query_params["category"])
+        eci_products = frappe.db.sql(f"""
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility, 
+            c.category_name, c.sub_category_1 category_name
+            from `tabItem` i inner join `tabECI Categories Table` c
+            ON i.item_code = c.parent 
+            where i.publish_to_commerce_app = 1 
+            and i.item_name like '%{decoded_search}%'
+            and c.category_name='{decoded_cat}' or c.sub_category_1='{decoded_cat}' group by i.item_code
+        """, as_dict=True)
+    elif "search" in query_params:
+        decoded_search = unquote(query_params["search"])
+        eci_products = frappe.db.sql(f"""
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility
+            from `tabItem` i
+            where i.publish_to_commerce_app = 1 
+            and i.item_name like '%{decoded_search}%' group by i.item_code
         """, as_dict=True)
     elif "category" in query_params:
         decoded_cat = unquote(query_params["category"])
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.description, i.eci_is_product_used,
-            i.has_specific_compatibility, c.category_name,c.sub_category_1
+            select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility, 
+            c.category_name, c.sub_category_1 category_name
             from `tabItem` i inner join `tabECI Categories Table` c
-            ON i.item_code = c.parent
-            where i.publish_to_commerce_app = 1
-            and c.category_name='{decoded_cat}' or c.sub_category_1='{decoded_cat}';
-            ;
+            ON i.item_code = c.parent 
+            where i.publish_to_commerce_app = 1 
+            and c.category_name='{decoded_cat}' or c.sub_category_1='{decoded_cat}' group by i.item_code
         """, as_dict=True)
     else:
         eci_products = frappe.db.sql(f"""
@@ -151,7 +169,6 @@ def products():
             i.has_specific_compatibility
             from `tabItem` i
             where i.publish_to_commerce_app = 1
-            ;
         """, as_dict=True)
 
     for prod in eci_products:

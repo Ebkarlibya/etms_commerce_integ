@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:etms/pr/{#####} ",
+ "autoname": "format:TG-PR-{######}",
  "creation": "2022-04-19 17:39:11.620022",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -71,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-23 10:16:58.361763",
+ "modified": "2022-04-23 10:42:56.818367",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Parts Request",
