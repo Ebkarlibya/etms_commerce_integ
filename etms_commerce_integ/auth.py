@@ -25,8 +25,9 @@ def eci_verify_request(func):
             return func_res
 
         except Exception as e:
-            print(e)
-            return {"message": "not_authorized"}
+            # REMOVE THIS
+            print(e.args)
+            return {"message": "internal_server_error"}
 
     return wrapper
 
