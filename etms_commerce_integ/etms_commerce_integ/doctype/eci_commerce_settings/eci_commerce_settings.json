@@ -11,7 +11,12 @@
   "allow_new_users_registrations",
   "column_break_5",
   "api_key",
-  "api_secret"
+  "api_secret",
+  "general_settings_section",
+  "default_customer_group",
+  "default_company",
+  "default_price_list",
+  "default_currency"
  ],
  "fields": [
   {
@@ -46,12 +51,49 @@
   {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "general_settings_section",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "fieldname": "default_customer_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Customer Group",
+   "options": "Customer Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_price_list",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Price List",
+   "options": "Price List",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_currency",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Currency",
+   "options": "Currency",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-04-19 11:06:59.366467",
+ "modified": "2022-04-29 15:26:35.097660",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Commerce Settings",

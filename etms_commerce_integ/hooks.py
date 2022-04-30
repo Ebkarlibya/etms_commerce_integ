@@ -199,6 +199,8 @@ fixtures = [{
         "eci_categories",
         "eci_product_images",
         "has_specific_compatibility",
-        "eci_vehicle_compatibility")
+        "eci_vehicle_compatibility",
+        "eci_order_section",
+        "is_eci_order")
     ]]
 }]

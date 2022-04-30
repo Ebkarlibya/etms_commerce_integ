@@ -1,9 +1,7 @@
 from ast import arg
 from functools import wraps
 import frappe
-from frappe.core.doctype.user.user import generate_keys
 from frappe.core.doctype.user.user import User
-from pandas import read_html
 
 
 def eci_verify_request(func):
