@@ -173,7 +173,8 @@ def products():
         """
 
     eci_products = frappe.db.sql(f"""
-        select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility
+        select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility,
+        i.standard_rate
 
         from `tabItem` i
         where i.publish_to_commerce_app = 1
@@ -200,17 +201,17 @@ def products():
             continue
 
         # get product price
-        price = 0
-        _price = frappe.get_all("Item Price",
-                                fields=["price_list_rate"],
-                                filters={
-                                    "price_list": prod.commerce_app_price_list
-                                    or "Standard Selling",
-                                    "item_code": prod.item_code
-                                },
-                                order_by="valid_from desc")
-        if len(_price) > 0:
-            price = _price[0]["price_list_rate"]
+        # price = 0
+        # _price = frappe.get_all("Item Price",
+        #                         fields=["price_list_rate"],
+        #                         filters={
+        #                             "price_list": prod.commerce_app_price_list
+        #                             or "Standard Selling",
+        #                             "item_code": prod.item_code
+        #                         },
+        #                         order_by="valid_from desc")
+        # if len(_price) > 0:
+        #     price = _price[0]["price_list_rate"]
 
         # is the product available in stock
         actual_qty = 0
@@ -270,9 +271,9 @@ def products():
             "description": prod.description,
             #"short_description": prod.description,
             #"sku": "asd-dsa-dsa",
-            "price": price,
+            "price": prod.standard_rate,
             #"regular_price": 25, show up as discounted price in flutter
-            "sale_price": price,
+            "sale_price": prod.standard_rate,
             #"stock_quantity": 70,
             "in_stock": inStock,
             "condition": str(prod.eci_is_product_used),

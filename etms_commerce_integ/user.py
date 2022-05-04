@@ -16,6 +16,8 @@ def update_user_profile():
     user.last_name = last_name
 
     user.save()
+    # update customer territory
+    frappe.db.set_value("Customer", user.name, "territory", shipping_city)
     address = None
     if len(frappe.get_all("Address", filters={"name": f"{user.name}-Shipping"})) == 0:
         new_address = frappe.get_doc({

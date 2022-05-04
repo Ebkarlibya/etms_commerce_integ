@@ -201,6 +201,8 @@ fixtures = [{
         "has_specific_compatibility",
         "eci_vehicle_compatibility",
         "eci_order_section",
-        "is_eci_order")
+        "is_eci_order",
+        "eci_shipping_territory",
+        "eci_shipping_address")
     ]]
 }]
