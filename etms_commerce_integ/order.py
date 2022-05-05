@@ -28,7 +28,8 @@ def checkout():
     line_items = frappe.form_dict["line_items"]
     shipping_territory = frappe.form_dict["shipping_territory"]
     shipping_address = frappe.form_dict["shipping_address"]
-    
+    mode_of_payment = frappe.form_dict["mode_of_payment"]
+
     # prepare items
     items = []
     for item in line_items:
@@ -49,7 +50,11 @@ def checkout():
         })
     # add shipping item from territory
     shipping_item = frappe.get_all("Item", 
-    fields=["item_code"], filters={"is_shipping_item": 1, "shipping_territory": shipping_territory})
+    fields=["item_code", "standard_rate"],
+                filters={
+                    "is_shipping_item": 1,
+                    "shipping_territory": shipping_territory
+                })
     shipping_item_details = get_item_details({
             "item_code": shipping_item[0].item_code,
             "company": eci_settings.default_company,
@@ -59,7 +64,7 @@ def checkout():
         })
     items.append({
         "item_code": shipping_item[0].item_code,
-        "rate": shipping_item_details['valuation_rate'],
+        "rate": shipping_item[0].standard_rate,
         "margin_type": "",
         "delivery_date": datetime.now(),
         "qty": 1
@@ -81,6 +86,8 @@ def checkout():
             "is_eci_order": 1,
             "eci_shipping_territory": shipping_territory,
             "eci_shipping_address": shipping_address,
+            "mode_of_payment": mode_of_payment,
+            "eci_shipping_cost": shipping_item[0].standard_rate
             # "taxes_and_charges": tax_rules,
             # "customer_address": billing_address,
             # "shipping_address_name": shipping_address
@@ -88,6 +95,7 @@ def checkout():
         })
         frappe.flags.ignore_permissions = True
         so.insert()
+        so.submit()
 
         return {"message": "your_order_accepted"}
     except Exception as e:
@@ -100,7 +108,7 @@ def checkout():
 def customer_orders():
 
     _orders = frappe.get_all("Sales Order",
-                             fields=["name", "status", "total", "total_qty"],
+                             fields=["name", "status", "total", "total_qty", "eci_shipping_cost"],
                              filters={
                                  "customer": frappe.session.user,
                                  "is_eci_order": 1
@@ -110,11 +118,12 @@ def customer_orders():
     for order in _orders:
         customer_orders.append({
             "id": order.name,
-            "delivery_status": "working",
+            "delivery_status": order.status,
             "shipping": order.shipping_address,
             "status": order.status,
             "quantity": int(order.total_qty),
             "total": float(order.total),
+            "shipping_total": order.eci_shipping_cost
         })
     return customer_orders
 

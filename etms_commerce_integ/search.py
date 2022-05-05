@@ -40,3 +40,15 @@ def search_territories():
                                  filters={"is_group": False})
 
     return territories
+
+
+@frappe.whitelist(allow_guest=False, methods=["POST"])
+@eci_verify_request
+def search_payment_methods():
+
+    payment_methods = frappe.get_all("Mode of Payment",
+                                 fields=["name"],
+                                 filters={"enabled": True}
+                                )
+
+    return payment_methods

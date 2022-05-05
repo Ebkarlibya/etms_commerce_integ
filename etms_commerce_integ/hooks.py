@@ -203,6 +203,8 @@ fixtures = [{
         "eci_order_section",
         "is_eci_order",
         "eci_shipping_territory",
-        "eci_shipping_address")
+        "eci_shipping_address",
+        "mode_of_payment",
+        "eci_shipping_cost")
     ]]
 }]
