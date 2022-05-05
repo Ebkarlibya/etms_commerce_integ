@@ -4,7 +4,7 @@ from frappe.desk.treeview import get_children
 from urllib.parse import unquote
 from etms_commerce_integ.auth import eci_verify_request
 
-DOMAIN = "http://192.168.1.155:8000"
+DOMAIN = frappe.get_single("ECI Commerce Settings").eci_domain
 DEBUG = False
 
 @frappe.whitelist(allow_guest=False)
