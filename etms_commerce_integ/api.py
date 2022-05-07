@@ -48,7 +48,7 @@ def upload_file():
     return {"message": "file_uploaded_successfully"}
 
 
-@frappe.whitelist(allow_guest=True, methods=["POST"])
+@frappe.whitelist(allow_guest=False, methods=["POST"])
 @eci_verify_request
 def request_part():
     part_make = frappe.form_dict["part_make"]
@@ -73,7 +73,7 @@ def request_part():
         "part_description": part_description,
         "requested_by": frappe.session.user
     })
-
+    part_request.flags.ignore_permissions = True
     part_request.insert()
     # request_rejected
     return {"message": "request_accepted", "request_name": part_request.name}

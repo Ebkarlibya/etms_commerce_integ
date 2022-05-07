@@ -1,31 +1,24 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:title",
+ "autoname": "format:ECI-LOG-{########}",
  "creation": "2022-05-07 08:08:11.238632",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "title",
   "content"
  ],
  "fields": [
   {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "label": "Title",
-   "unique": 1
-  },
-  {
    "fieldname": "content",
-   "fieldtype": "Small Text",
+   "fieldtype": "Long Text",
    "label": "Content"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-05-07 09:07:57.462671",
+ "modified": "2022-05-07 10:45:43.127314",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Error Logs",

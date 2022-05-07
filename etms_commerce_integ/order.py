@@ -59,13 +59,13 @@ def checkout():
                                        "is_shipping_item": 1,
                                        "shipping_territory": shipping_territory
                                    })
-    shipping_item_details = get_item_details({
-        "item_code": shipping_item[0].item_code,
-        "company": eci_settings.default_company,
-        "doctype": "Sales Order",
-        "conversion_rate": 1,
-        "price_list": "Standard Selling"
-    })
+    # shipping_item_details = get_item_details({
+    #     "item_code": shipping_item[0].item_code,
+    #     "company": eci_settings.default_company,
+    #     "doctype": "Sales Order",
+    #     "conversion_rate": 1,
+    #     "price_list": "Standard Selling"
+    # })
     items.append({
         "item_code": shipping_item[0].item_code,
         "rate": shipping_item[0].standard_rate,
@@ -103,14 +103,13 @@ def checkout():
             # TODO SHIPPING ADDR
         })
         frappe.flags.ignore_permissions = True
+        frappe.set_user("administrator")
         so.insert()
         so.submit()
 
         return {"message": "your_order_accepted"}
     except Exception as e:
         print(e)
-        frappe.throw(e.args)
-
 
 @frappe.whitelist(allow_guest=False, methods=['GET'])
 @eci_verify_request

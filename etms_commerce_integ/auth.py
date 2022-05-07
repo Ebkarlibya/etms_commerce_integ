@@ -25,7 +25,7 @@ def eci_verify_request(func):
 
         except Exception as e:
             # REMOVE THIS
-            eci_log_error(title=e.args)
+            eci_log_error()
             print(e.args)
             return {"message": "internal_server_error"}
 
