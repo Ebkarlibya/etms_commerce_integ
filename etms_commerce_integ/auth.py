@@ -2,13 +2,13 @@ from ast import arg
 from functools import wraps
 import frappe
 from frappe.core.doctype.user.user import User
-
+from etms_commerce_integ.utils import eci_log_error
+eci_settings = frappe.get_single("ECI Commerce Settings")
 
 def eci_verify_request(func):
 
     def wrapper(*args, **kwargs):
         headers = frappe.request.headers
-        eci_settings = frappe.get_single("ECI Commerce Settings")
         if eci_settings.enabled == 0:
             return {"message": "services_disabled"}
         try:
@@ -19,11 +19,13 @@ def eci_verify_request(func):
             if API_KEY != eci_settings.api_key or API_SECRET != eci_settings.get_password(
                     "api_secret"):
                     return {"message": "not_authorized"}
+                    # raise Exception('Some Error') 
             # del kwargs['cmd']
             return func_res
 
         except Exception as e:
             # REMOVE THIS
+            eci_log_error(title=e.args)
             print(e.args)
             return {"message": "internal_server_error"}
 
