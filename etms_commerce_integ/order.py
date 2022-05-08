@@ -6,7 +6,7 @@ from erpnext.stock.get_item_details import get_item_details
 from numpy import double
 
 
-@frappe.whitelist(allow_guest=False, methods=['GET'])
+@frappe.whitelist(allow_guest=True, methods=['GET'])
 @eci_verify_request
 def get_shipping_cost():
     shipping_territory = frappe.form_dict["shipping_territory"]
