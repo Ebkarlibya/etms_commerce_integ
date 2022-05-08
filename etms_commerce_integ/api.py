@@ -142,7 +142,10 @@ def products():
     if "search" in q:
         sql_escaped_values["search"] = f"%{q['search']}%"
         sql_term_cond = """
-            and i.item_name like %(search)s
+            and (
+                i.item_code like %(search)s
+                or i.item_name like %(search)s
+                or i.description like %(search)s)
 
         """
 
