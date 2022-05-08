@@ -3,7 +3,7 @@ from etms_commerce_integ.auth import eci_verify_request
 from frappe.desk.search import validate_and_sanitize_search_inputs
 
 
-@frappe.whitelist(allow_guest=False, methods=["POST"])
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
 def search_vehicle_compatibility():
     filters = []
@@ -31,7 +31,7 @@ def search_vehicle_compatibility():
     return result
 
 
-@frappe.whitelist(allow_guest=False, methods=["POST"])
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
 def search_territories():
 
@@ -42,7 +42,7 @@ def search_territories():
     return territories
 
 
-@frappe.whitelist(allow_guest=False, methods=["POST"])
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
 def search_payment_methods():
 
