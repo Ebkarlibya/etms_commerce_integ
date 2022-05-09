@@ -86,7 +86,8 @@ def categories():
     categories = []
     eci_categories = frappe.get_all(
         "ECI Category",
-        fields=["category_image", "category_name", "parent_eci_category"])
+        fields=["category_image", "category_name", "parent_eci_category"],
+        order_by="order_weight asc")
 
     for cat in eci_categories:
         # count items under this category
