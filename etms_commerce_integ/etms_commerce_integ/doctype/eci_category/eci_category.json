@@ -85,7 +85,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2022-05-09 10:10:14.440482",
+ "modified": "2022-05-09 15:49:40.901977",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Category",
@@ -100,7 +100,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "ECI System Manager",
    "share": 1,
    "write": 1
   }

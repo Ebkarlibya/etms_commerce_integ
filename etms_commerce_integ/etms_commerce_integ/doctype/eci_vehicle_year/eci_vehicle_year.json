@@ -19,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-16 13:40:05.590911",
+ "modified": "2022-05-09 15:58:58.863826",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Vehicle Year",
@@ -33,7 +33,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "ECI System Manager",
    "share": 1,
    "write": 1
   }

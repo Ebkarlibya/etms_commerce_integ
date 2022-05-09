@@ -71,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-23 10:42:56.818367",
+ "modified": "2022-05-09 15:58:41.183816",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Parts Request",
@@ -85,7 +85,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "ECI System Manager",
    "share": 1,
    "write": 1
   }

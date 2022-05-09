@@ -186,7 +186,14 @@ user_data_fields = [{
 # For example: Role, Gender, etc.
 # translated_search_doctypes = []
 
-fixtures = [{
+fixtures = [
+    {
+		"dt":"Role", 
+		"filters": [["name", "in", (
+            "ECI System Manager"
+        )]]
+	},
+    {
     "doctype":
     "Custom Field",
     "filters": [[

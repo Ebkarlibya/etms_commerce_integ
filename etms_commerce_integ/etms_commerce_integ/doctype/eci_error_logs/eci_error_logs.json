@@ -18,7 +18,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-05-07 10:45:43.127314",
+ "modified": "2022-05-09 15:57:20.381739",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Error Logs",
@@ -32,7 +32,8 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "ECI System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }
