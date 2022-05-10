@@ -205,17 +205,17 @@ def products():
             continue
 
         # get product price
-        # price = 0
-        # _price = frappe.get_all("Item Price",
-        #                         fields=["price_list_rate"],
-        #                         filters={
-        #                             "price_list": prod.commerce_app_price_list
-        #                             or "Standard Selling",
-        #                             "item_code": prod.item_code
-        #                         },
-        #                         order_by="valid_from desc")
-        # if len(_price) > 0:
-        #     price = _price[0]["price_list_rate"]
+        price = 0
+        _price = frappe.get_all("Item Price",
+                                fields=["price_list_rate"],
+                                filters={
+                                    "price_list": prod.commerce_app_price_list
+                                    or "Standard Selling",
+                                    "item_code": prod.item_code
+                                },
+                                order_by="valid_from desc")
+        if len(_price) > 0:
+            price = _price[0]["price_list_rate"]
 
         # is the product available in stock
         actual_qty = 0
@@ -275,9 +275,9 @@ def products():
             "description": prod.description,
             #"short_description": prod.description,
             #"sku": "asd-dsa-dsa",
-            "price": prod.standard_rate,
+            "price": price,
             #"regular_price": 25, show up as discounted price in flutter
-            "sale_price": prod.standard_rate,
+            "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
             "condition": str(prod.eci_is_product_used),

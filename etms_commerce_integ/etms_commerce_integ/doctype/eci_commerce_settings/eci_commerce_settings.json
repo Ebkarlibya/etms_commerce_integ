@@ -17,7 +17,6 @@
   "default_customer_group",
   "default_company",
   "column_break_11",
-  "default_price_list",
   "default_currency"
  ],
  "fields": [
@@ -76,14 +75,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "default_price_list",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Default Price List",
-   "options": "Price List",
-   "reqd": 1
-  },
-  {
    "fieldname": "default_currency",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -105,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-05-09 15:58:16.301622",
+ "modified": "2022-05-10 08:32:36.294701",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Commerce Settings",

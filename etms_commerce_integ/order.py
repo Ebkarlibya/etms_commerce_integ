@@ -85,7 +85,7 @@ def checkout():
             "eci_expected_delivery_date": add_to_date(nowdate(), days=terr_delivery_days),
             "delivery_date": add_to_date(nowdate(), days=terr_delivery_days),
             "company": eci_settings.default_company,
-            "selling_price_list": eci_settings.default_price_list,
+            # "selling_price_list": eci_settings.default_price_list,
             "ignore_pricing_rule": 1,
             "items": items,
             # disabled discount as WooCommerce will send this both in the item rate and as discount
