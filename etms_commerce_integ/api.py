@@ -177,8 +177,8 @@ def products():
         """
 
     eci_products = frappe.db.sql(f"""
-        select i.item_name, i.item_code, i.description, i.eci_is_product_used, i.has_specific_compatibility,
-        i.standard_rate
+        select i.item_name, i.item_code, i.brand, i.description, i.eci_is_product_used,
+        i.has_specific_compatibility, i.standard_rate
 
         from `tabItem` i
         where i.publish_to_commerce_app = 1
@@ -272,6 +272,7 @@ def products():
             "publish",
             "featured": False,
             #"catalog_visibility": "visible",
+            "brand": prod.brand,
             "description": prod.description,
             #"short_description": prod.description,
             #"sku": "asd-dsa-dsa",
