@@ -213,6 +213,7 @@ fixtures = [
         "eci_shipping_address",
         "mode_of_payment",
         "eci_expected_delivery_date",
+        "eci_section",
         "expected_territory_delivery_time")
     ]]
 }]
