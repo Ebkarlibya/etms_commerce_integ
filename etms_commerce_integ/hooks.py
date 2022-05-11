@@ -212,8 +212,6 @@ fixtures = [
         "eci_shipping_territory",
         "eci_shipping_address",
         "mode_of_payment",
-        "eci_shipping_cost",
-        "eci_expected_shipping_days",
         "eci_expected_delivery_date",
         "expected_territory_delivery_time")
     ]]

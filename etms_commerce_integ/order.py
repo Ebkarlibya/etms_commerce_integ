@@ -112,12 +112,12 @@ def checkout():
             # "warehouse": woocommerce_settings.warehouse
         })
     # add shipping item from territory
-    shipping_item = frappe.get_all("Item",
-                                   fields=["item_code", "standard_rate"],
-                                   filters={
-                                       "is_shipping_item": 1,
-                                       "shipping_territory": shipping_territory
-                                   })
+    # shipping_item = frappe.get_all("Item",
+    #                                fields=["item_code", "standard_rate"],
+    #                                filters={
+    #                                    "is_shipping_item": 1,
+    #                                    "shipping_territory": shipping_territory
+    #                                })
     # shipping_item_details = get_item_details({
     #     "item_code": shipping_item[0].item_code,
     #     "company": eci_settings.default_company,
@@ -135,10 +135,6 @@ def checkout():
     # })
     try:
         # the expected delivery date of territory
-        terr_delivery_days = frappe.db.get_value(
-            "Territory",
-            shipping_territory,
-            fieldname="eci_expected_shipping_days")
         so = frappe.get_doc({
             "doctype":
             "Sales Order",
@@ -170,8 +166,6 @@ def checkout():
             shipping_address,
             "mode_of_payment":
             mode_of_payment,
-            "eci_shipping_cost":
-            shipping_item[0].standard_rate
             # "taxes_and_charges": tax_rules,
             # "customer_address": billing_address,
             # "shipping_address_name": shipping_address
