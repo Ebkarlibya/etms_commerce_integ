@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-05-10 14:00:00.690900",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "territory",
+  "expected_delivery_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Territory",
+   "options": "Territory"
+  },
+  {
+   "default": "0",
+   "fieldname": "expected_delivery_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Expected Delivery Days"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-05-10 15:01:46.672927",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Warehouse Expected Delivery Date Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
