@@ -190,7 +190,9 @@ fixtures = [
     {
 		"dt":"Role", 
 		"filters": [["name", "in", (
-            "ECI System Manager"
+            "ECI System Manager",
+            "ECI System User",
+            "ECI Product Manager"
         )]]
 	},
     {
