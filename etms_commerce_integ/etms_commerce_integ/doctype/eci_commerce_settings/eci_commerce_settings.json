@@ -15,9 +15,11 @@
   "api_secret",
   "general_settings_section",
   "default_customer_group",
+  "default_signup_customer_price_list",
   "default_company",
   "column_break_11",
-  "default_currency"
+  "default_currency",
+  "guest_user_price_list"
  ],
  "fields": [
   {
@@ -62,7 +64,7 @@
    "fieldname": "default_customer_group",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Default Customer Group",
+   "label": "Default SignUp Customer Group",
    "options": "Customer Group",
    "reqd": 1
   },
@@ -91,12 +93,25 @@
   {
    "fieldname": "column_break_11",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "guest_user_price_list",
+   "fieldtype": "Link",
+   "label": "Guest User Price List",
+   "options": "Price List",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_signup_customer_price_list",
+   "fieldtype": "Link",
+   "label": "Default SignUp Customer Price List",
+   "options": "Price List"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-05-10 08:32:36.294701",
+ "modified": "2022-05-12 14:27:07.068374",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Commerce Settings",

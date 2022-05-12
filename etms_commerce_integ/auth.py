@@ -69,17 +69,21 @@ def login():
     usr = frappe.form_dict["usr"]
     pwd = frappe.form_dict["pwd"]
 
-    if usr and pwd:
-        _user = User.find_by_credentials(usr, pwd)
-        user = frappe.get_doc("User", _user.name)
-        if user and _user["is_authenticated"]:
-            return {
-                "user": user.name,
-                "api_key": user.api_key,
-                "api_secret": user.get_password("api_secret"),
-            }
+    try:
+        if usr and pwd:
+            _user = User.find_by_credentials(usr, pwd)
+            user = frappe.get_doc("User", _user.name)
+            if user and _user["is_authenticated"]:
+                return {
+                    "user": user.name,
+                    "api_key": user.api_key,
+                    "api_secret": user.get_password("api_secret"),
+                }
+            return {"message": "faild_to_login"}
 
-    return "faild to login"
+    except Exception as e:
+        eci_log_error()
+        return {"message": "faild_to_login"}
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
@@ -135,7 +139,8 @@ def sign_up():
         "customer_group": "Commercial",
         "territory": "All Territories",
         "customer_type": frappe._("Individual"),
-        "mobile_no": phone_number
+        "mobile_no": phone_number,
+        "default_price_list": eci_settings.default_signup_customer_price_list
     })
 
     customer.flags.ignore_mandatory = True

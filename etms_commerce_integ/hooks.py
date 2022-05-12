@@ -201,9 +201,9 @@ fixtures = [
     "filters": [[
         "fieldname", "in",
         ("eci_product_section",
+        "eci_product",
         "publish_to_commerce_app",
         "eci_is_product_used",
-        "commerce_app_price_list",
         "warehouses_to_check_item_availability",
         "eci_categories",
         "eci_product_images",

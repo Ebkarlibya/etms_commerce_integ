@@ -3,8 +3,9 @@ from frappe.utils import get_url
 from frappe.desk.treeview import get_children
 from urllib.parse import unquote
 from etms_commerce_integ.auth import eci_verify_request
+from etms_commerce_integ.utils import get_item_price
 
-DOMAIN = frappe.get_single("ECI Commerce Settings").eci_domain
+
 DEBUG = False
 
 @frappe.whitelist(allow_guest=False)
@@ -84,6 +85,8 @@ def request_part():
 def categories():
     frappe.get_all("Item", filters={})
     categories = []
+    eci_settings = frappe.get_single("ECI Commerce Settings")
+
     eci_categories = frappe.get_all(
         "ECI Category",
         fields=["category_image", "category_name", "parent_eci_category"],
@@ -104,7 +107,7 @@ def categories():
         # build category image url
         category_image_url = ""
         if cat.category_image:
-            category_image_url = DOMAIN + cat.category_image
+            category_image_url = eci_settings.eci_domain + cat.category_image
             #category_image_url = get_url() + cat.category_image
 
         categories.append({
@@ -124,7 +127,9 @@ def categories():
 @frappe.whitelist(allow_guest=True, methods=["GET"])
 @eci_verify_request
 def products():
-    q = frappe.request.args    
+    q = frappe.request.args
+    eci_settings = frappe.get_single("ECI Commerce Settings")
+
     sql_escaped_values = {}
     sql_id_cond = ""
     sql_term_cond = ""
@@ -185,6 +190,8 @@ def products():
         {sql_id_cond}
         {sql_cat_cond}
         {sql_comp_cond}
+
+        
         {sql_term_cond}
     """, sql_escaped_values, as_dict=True, debug=DEBUG)
 
@@ -205,17 +212,8 @@ def products():
             continue
 
         # get product price
-        price = 0
-        _price = frappe.get_all("Item Price",
-                                fields=["price_list_rate"],
-                                filters={
-                                    "price_list": prod.commerce_app_price_list
-                                    or "Standard Selling",
-                                    "item_code": prod.item_code
-                                },
-                                order_by="valid_from desc")
-        if len(_price) > 0:
-            price = _price[0]["price_list_rate"]
+        price = get_item_price(prod.item_code)
+
 
         # is the product available in stock
         actual_qty = 0
@@ -293,7 +291,7 @@ def products():
             ],
             "images": [
                 {
-                    "src": DOMAIN+ pi.product_image,
+                    "src": eci_settings.eci_domain + pi.product_image,
                     "name": pi.product_image,
                     # "alt": "",
                     # "position": 0
