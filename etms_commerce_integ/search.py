@@ -30,6 +30,15 @@ def search_vehicle_compatibility():
 
     return result
 
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@eci_verify_request
+def search_product_brands():
+
+    brands = frappe.get_all("Brand",
+                                 fields=["name"],
+                                )
+
+    return brands
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request

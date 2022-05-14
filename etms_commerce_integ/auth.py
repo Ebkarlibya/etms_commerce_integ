@@ -129,7 +129,8 @@ def sign_up():
     user.flags.ignore_password_policy = True
     
     user.insert()
-    # user.add_roles("Customer")
+    user.add_roles("Customer")
+    # user.save()
 
     frappe.set_user("administrator")
     customer = frappe.get_doc({

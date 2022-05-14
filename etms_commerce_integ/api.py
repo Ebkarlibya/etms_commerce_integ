@@ -133,6 +133,7 @@ def products():
     sql_escaped_values = {}
     sql_id_cond = ""
     sql_term_cond = ""
+    sql_brand_cond = ""
     sql_cat_cond = ""
     sql_comp_cond = ""
 
@@ -153,6 +154,12 @@ def products():
                 or i.item_name like %(search)s
                 or i.description like %(search)s)
 
+        """
+
+    if "brand" in q and q["brand"]:
+        sql_escaped_values["brand"] = f"{q['brand']}"
+        sql_brand_cond = """
+            and i.brand = %(brand)s
         """
 
     if "category" in q:
@@ -190,7 +197,7 @@ def products():
         {sql_id_cond}
         {sql_cat_cond}
         {sql_comp_cond}
-
+        {sql_brand_cond}
         
         {sql_term_cond}
     """, sql_escaped_values, as_dict=True, debug=DEBUG)
