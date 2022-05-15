@@ -18,6 +18,77 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Products",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Products",
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Product Categories",
+   "link_to": "ECI Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Product Brands",
+   "link_to": "Brand",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Orders",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Orders",
+   "link_to": "Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Methods",
+   "link_to": "Mode of Payment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse Expected Delivery Time",
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Vehicle Compatibility",
    "link_to": "ECI Vehicle Make",
    "link_type": "DocType",
@@ -55,7 +126,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Order Settings",
+   "label": "Settings & Misc",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -63,20 +134,11 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Warehouse Expected Delivery Time",
-   "link_to": "Warehouse",
+   "label": "ECI Settings",
+   "link_to": "ECI Commerce Settings",
    "link_type": "DocType",
    "onboard": 0,
-   "only_for": "",
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Misc",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
   },
   {
    "hidden": 0,
@@ -88,7 +150,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-11 12:51:42.995783",
+ "modified": "2022-05-15 08:57:52.692288",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",
@@ -122,25 +184,11 @@
    "type": "DocType"
   },
   {
-   "color": "#B4CD29",
-   "doc_view": "",
-   "icon": "file",
-   "label": "ECI Commerce Settings",
-   "link_to": "ECI Commerce Settings",
-   "type": "DocType"
-  },
-  {
    "doc_view": "",
    "icon": "file",
    "label": "Parts Request",
    "link_to": "ECI Parts Request",
    "stats_filter": "",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "List",
-   "label": "Payment Methods",
-   "link_to": "Mode of Payment",
    "type": "DocType"
   }
  ],
