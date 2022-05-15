@@ -3,6 +3,9 @@ from functools import wraps
 import frappe
 from frappe.core.doctype.user.user import User
 from etms_commerce_integ.utils import eci_log_error
+from frappe.utils import get_url
+
+
 eci_settings = frappe.get_single("ECI Commerce Settings")
 
 def eci_verify_request(func):
@@ -32,20 +35,25 @@ def eci_verify_request(func):
     return wrapper
 
 
-@frappe.whitelist(allow_guest=True, methods=["GET"])
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
 def request_password_reset():
     recipients = [
         'igentle.appletec@gmail.com',
     ]
 
-    frappe.sendmail(
-        recipients=recipients,
-        sender="notifications@torous.ly",
-        subject="A Subject Test",
-        message="Hello :D",
-        delayed=False
-    )
+    content = f"""
+            الرجاءالدخول للرابط التالي لإعادة ضبط كلمة المرور:
+{eci_settings.eci_domain + "/password-reset"}
+        """
+    print(content)
+    # frappe.sendmail(
+    #     recipients=recipients,
+    #     sender="notifications@torous.ly",
+    #     subject="تروس - إعادة ضبط كلمة المرور",
+    #     message=content,
+    #     delayed=False
+    # )
 
 @frappe.whitelist(allow_guest=False, methods=["GET"])
 @eci_verify_request

@@ -189,7 +189,7 @@ def products():
         """
 
     eci_products = frappe.db.sql(f"""
-        select i.item_name, i.item_code, i.brand, i.description, i.eci_is_product_used,
+        select i.item_name, i.item_code, i.brand, i.description, i.eci_product_state,
         i.has_specific_compatibility, i.standard_rate
 
         from `tabItem` i
@@ -267,6 +267,7 @@ def products():
                 where parent='{prod.item_code}';
                 """,
                 as_dict=True)
+
         products_list.append({
             "id": prod.item_code,
             "name": prod.item_name,
@@ -286,7 +287,7 @@ def products():
             "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
-            "condition": str(prod.eci_is_product_used),
+            "condition": "0" if prod.eci_product_state == "New" else "1",
             "categories": product_categories,
             "vehicleCompatsList": vehicleCompatsList,
             "tags": [
