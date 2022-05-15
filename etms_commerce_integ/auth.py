@@ -32,6 +32,21 @@ def eci_verify_request(func):
     return wrapper
 
 
+@frappe.whitelist(allow_guest=True, methods=["GET"])
+@eci_verify_request
+def request_password_reset():
+    recipients = [
+        'igentle.appletec@gmail.com',
+    ]
+
+    frappe.sendmail(
+        recipients=recipients,
+        sender="notifications@torous.ly",
+        subject="A Subject Test",
+        message="Hello :D",
+        delayed=False
+    )
+
 @frappe.whitelist(allow_guest=False, methods=["GET"])
 @eci_verify_request
 def user_info():
