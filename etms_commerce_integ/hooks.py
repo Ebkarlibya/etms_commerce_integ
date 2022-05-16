@@ -203,7 +203,7 @@ fixtures = [
         ("eci_product_section",
         "eci_product",
         "publish_to_commerce_app",
-        "eci_product_state"
+        "eci_product_state",
         "warehouses_to_check_item_availability",
         "eci_categories",
         "eci_product_images",

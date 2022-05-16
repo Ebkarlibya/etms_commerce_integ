@@ -1,9 +1,14 @@
 import frappe
 
 
-def eci_log_error():
+def eci_log_error(content=None):
     tb = frappe.get_traceback()
-    log = frappe.get_doc({"doctype": "ECI Error Logs", "content": tb})
+    doc = {
+        "doctype": "ECI Error Logs",
+        "content": content or tb
+    }
+
+    log = frappe.get_doc(doc)
     log.flags.ignore_permissions = True
     log.insert()
 

@@ -1,12 +1,12 @@
 from ast import arg
 from functools import wraps
 import frappe
-from frappe.core.doctype.user.user import User
+from frappe.core.doctype.user.user import User, test_password_strength
 from etms_commerce_integ.utils import eci_log_error
-from frappe.utils import get_url
-
+from frappe.utils import get_url, password_strength, random_string
 
 eci_settings = frappe.get_single("ECI Commerce Settings")
+
 
 def eci_verify_request(func):
 
@@ -21,8 +21,8 @@ def eci_verify_request(func):
 
             if API_KEY != eci_settings.api_key or API_SECRET != eci_settings.get_password(
                     "api_secret"):
-                    return {"message": "not_authorized"}
-                    # raise Exception('Some Error') 
+                return {"message": "not_authorized"}
+                # raise Exception('Some Error')
             # del kwargs['cmd']
             return func_res
 
@@ -38,22 +38,72 @@ def eci_verify_request(func):
 @frappe.whitelist(allow_guest=True, methods=["POST"])
 @eci_verify_request
 def request_password_reset():
-    recipients = [
-        'igentle.appletec@gmail.com',
-    ]
+    email = frappe.form_dict["user_login"]
 
-    content = f"""
-            الرجاءالدخول للرابط التالي لإعادة ضبط كلمة المرور:
-{eci_settings.eci_domain + "/password-reset"}
-        """
-    print(content)
-    # frappe.sendmail(
-    #     recipients=recipients,
-    #     sender="notifications@torous.ly",
-    #     subject="تروس - إعادة ضبط كلمة المرور",
-    #     message=content,
-    #     delayed=False
-    # )
+    user_exist = frappe.db.get_value("User", email)
+
+    if user_exist:
+        user = frappe.get_doc("User", email)
+
+        next_reset_key = random_string(25)
+        user.reset_password_key = next_reset_key
+        reset_url = eci_settings.eci_domain + "/password-reset?key=" + next_reset_key
+
+        user.flags.ignore_permissions = True
+        user.save()
+
+        content = f"""
+تروس - torous
+                الرجاءالدخول للرابط التالي لإعادة ضبط كلمة المرور:
+    {reset_url}
+            """
+        frappe.sendmail(
+            recipients=[email],
+            sender="notifications@torous.ly",
+            subject="تروس - إعادة ضبط كلمة المرور",
+            expose_recipients="header",
+            message=content,
+            delayed=False
+        )
+        return {"message": "password_reset_request_accepted"}
+    else:
+        return {"message": "password_reset_request_accepted"}
+
+# no consumer keys (web browser request)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+def handle_password_reset():
+    reset_key = frappe.form_dict["resetKey"]
+    new_password = frappe.form_dict["newPassword"]
+    
+    reset_user_exist = frappe.db.get_value("User", filters={"reset_password_key": reset_key})
+
+    pwTest = test_password_strength(new_password=new_password)
+    pass_policy = pwTest.get("feedback").get("password_policy_validation_passed")
+
+    if pass_policy == False:
+        return {"message": "password_weak"}
+
+    # log the try
+    eci_log_error(content=f"""
+        Reset Key: {reset_key}
+        New Password: {new_password}
+        Pass Policy: {pass_policy}
+    """)
+
+    if reset_user_exist:
+        user = frappe.get_doc("User", reset_user_exist)
+
+        user.new_password = new_password
+        user.reset_password_key = None
+        
+        user.flags.ignore_permissions = True
+        user.save()
+
+        return {"message": "password_reset_accepted"}
+    else:
+        return {"message": "password_reset_rejected"}
+
+
 
 @frappe.whitelist(allow_guest=False, methods=["GET"])
 @eci_verify_request
@@ -111,7 +161,8 @@ def login():
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
 def sign_up():
-    if frappe.get_value("ECI Commerce Settings", fieldname="allow_new_users_registrations") == 0:
+    if frappe.get_value("ECI Commerce Settings",
+                        fieldname="allow_new_users_registrations") == 0:
         return {"message": "new_registrations_disabled"}
 
     username = frappe.form_dict["username"]
@@ -150,21 +201,29 @@ def sign_up():
 
     user.flags.ignore_permissions = True
     user.flags.ignore_password_policy = True
-    
+
     user.insert()
     user.add_roles("Customer")
     # user.save()
 
     frappe.set_user("administrator")
     customer = frappe.get_doc({
-        "doctype": "Customer",
-        "account_manager": user.name,
-        "customer_name": user.email,
-        "customer_group": "Commercial",
-        "territory": "All Territories",
-        "customer_type": frappe._("Individual"),
-        "mobile_no": phone_number,
-        "default_price_list": eci_settings.default_signup_customer_price_list
+        "doctype":
+        "Customer",
+        "account_manager":
+        user.name,
+        "customer_name":
+        user.email,
+        "customer_group":
+        "Commercial",
+        "territory":
+        "All Territories",
+        "customer_type":
+        frappe._("Individual"),
+        "mobile_no":
+        phone_number,
+        "default_price_list":
+        eci_settings.default_signup_customer_price_list
     })
 
     customer.flags.ignore_mandatory = True
