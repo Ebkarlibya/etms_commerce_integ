@@ -255,14 +255,13 @@ def products():
             "ECI Product Images Table",
             fields=["product_image", "image_title"],
             filters={"parent": prod.item_code})
-        # product_image_url = "http://192.168.1.155:8000" + prod.category_image
-        #category_image_url = get_url() + cat.category_image
 
         # get product vehicle compatibility
         vehicleCompatsList = []
         if prod.has_specific_compatibility == 1:
             vehicleCompatsList = frappe.db.sql(f"""
-                select vehicle_make, vehicle_model, vehicle_year
+                select vehicle_make, vehicle_model, vehicle_year,
+                compat_note
                 from `tabECI Vehicle Compatibility Table`
                 where parent='{prod.item_code}';
                 """,

@@ -8,7 +8,8 @@
  "field_order": [
   "vehicle_make",
   "vehicle_model",
-  "vehicle_year"
+  "vehicle_year",
+  "compat_note"
  ],
  "fields": [
   {
@@ -31,12 +32,18 @@
    "in_list_view": 1,
    "label": "Vehicle Year",
    "options": "ECI Vehicle Year"
+  },
+  {
+   "fieldname": "compat_note",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Note"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-04-14 07:15:48.850789",
+ "modified": "2022-05-16 08:04:49.507991",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Vehicle Compatibility Table",
