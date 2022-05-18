@@ -251,11 +251,24 @@ def products():
                 })
 
         # get product images
-        product_images = frappe.get_all(
+        _product_images = frappe.get_all(
             "ECI Product Images Table",
             fields=["product_image", "image_title"],
             filters={"parent": prod.item_code},
             order_by="idx asc")
+
+        product_images = []
+        
+        for pImage in _product_images:
+            if pImage.product_image:
+                product_images.append(
+                    {
+                        "src": eci_settings.eci_domain + pImage.product_image,
+                        "name": pImage.product_image,
+                        # "alt": "",
+                        # "position": 0
+                    } 
+                )
 
         # get product vehicle compatibility
         vehicleCompatsList = []
@@ -297,14 +310,7 @@ def products():
                 #     "slug": "falatir-zait-avanti"
                 # }
             ],
-            "images": [
-                {
-                    "src": eci_settings.eci_domain + pi.product_image,
-                    "name": pi.product_image,
-                    # "alt": "",
-                    # "position": 0
-                } for pi in product_images
-            ],
+            "images": product_images,
             "variations": [],
             "attributes": [{
                 "id": 3,

@@ -19,13 +19,14 @@
   {
    "fieldname": "product_image",
    "fieldtype": "Attach Image",
-   "label": "Product Image"
+   "label": "Product Image",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-05-15 09:53:26.818773",
+ "modified": "2022-05-18 20:31:27.679259",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Product Images Table",
