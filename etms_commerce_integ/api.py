@@ -254,7 +254,8 @@ def products():
         product_images = frappe.get_all(
             "ECI Product Images Table",
             fields=["product_image", "image_title"],
-            filters={"parent": prod.item_code})
+            filters={"parent": prod.item_code},
+            order_by="idx asc")
 
         # get product vehicle compatibility
         vehicleCompatsList = []
