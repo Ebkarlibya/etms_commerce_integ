@@ -45,7 +45,7 @@ def search_product_brands():
 def search_territories():
 
     territories = frappe.get_all("Territory",
-                                 fields=["name", "eci_shipping_rate"],
+                                 fields=["name"],
                                  filters={"is_group": False})
 
     return territories

@@ -61,9 +61,9 @@ def request_password_reset():
             recipients=[email],
             sender="notifications@torous.ly",
             subject="تروس - إعادة ضبط كلمة المرور",
-            expose_recipients="header",
+            expose_recipients=True,
             message=content,
-            delayed=False
+            delayed=True
         )
         return {"message": "password_reset_request_accepted"}
     else:
