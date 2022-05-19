@@ -10,6 +10,7 @@
  ],
  "fields": [
   {
+   "default": "image 1",
    "fieldname": "image_title",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -26,7 +27,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-05-18 20:31:27.679259",
+ "modified": "2022-05-19 11:11:11.902664",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Product Images Table",

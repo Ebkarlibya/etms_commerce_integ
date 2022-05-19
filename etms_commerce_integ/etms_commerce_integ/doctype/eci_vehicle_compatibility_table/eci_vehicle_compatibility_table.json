@@ -17,14 +17,16 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle Make",
-   "options": "ECI Vehicle Make"
+   "options": "ECI Vehicle Make",
+   "reqd": 1
   },
   {
    "fieldname": "vehicle_model",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle Model",
-   "options": "ECI Vehicle Model"
+   "options": "ECI Vehicle Model",
+   "reqd": 1
   },
   {
    "fetch_from": "ECI Vehicle Year.parent_compat",
@@ -32,7 +34,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle Year",
-   "options": "ECI Vehicle Year"
+   "options": "ECI Vehicle Year",
+   "reqd": 1
   },
   {
    "fieldname": "compat_note",
@@ -44,7 +47,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-05-18 09:24:42.392215",
+ "modified": "2022-05-19 11:01:52.322061",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Vehicle Compatibility Table",
