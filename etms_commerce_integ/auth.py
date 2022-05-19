@@ -27,7 +27,6 @@ def eci_verify_request(func):
             return func_res
 
         except Exception as e:
-            # REMOVE THIS
             eci_log_error()
             print(e.args)
             return {"message": "internal_server_error"}
@@ -47,22 +46,24 @@ def request_password_reset():
 
         next_reset_key = random_string(25)
         user.reset_password_key = next_reset_key
-        reset_url = eci_settings.eci_domain + "/password-reset?key=" + next_reset_key
+        reset_url = eci_settings.eci_domain + "/eci-password-reset?key=" + next_reset_key
 
         user.flags.ignore_permissions = True
         user.save()
 
         content = f"""
 تروس - torous
-                الرجاءالدخول للرابط التالي لإعادة ضبط كلمة المرور:
     {reset_url}
             """
         frappe.sendmail(
             recipients=[email],
             sender="notifications@torous.ly",
-            subject="تروس - إعادة ضبط كلمة المرور",
+            subject="Torous: Password Reset",
             expose_recipients=True,
-            message=content,
+            template="reset_password",
+            args={
+                "reset_url": reset_url
+            },
             delayed=True
         )
         return {"message": "password_reset_request_accepted"}
