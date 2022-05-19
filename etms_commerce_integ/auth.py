@@ -55,6 +55,7 @@ def request_password_reset():
             recipients=[email],
             sender="notifications@torous.ly",
             subject="Torous: Password Reset",
+            reply_to="notifications@torous.ly",
             expose_recipients=True,
             template="reset_password",
             args={
