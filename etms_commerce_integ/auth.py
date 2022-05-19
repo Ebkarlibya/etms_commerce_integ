@@ -51,14 +51,10 @@ def request_password_reset():
         user.flags.ignore_permissions = True
         user.save()
 
-        content = f"""
-تروس - torous
-    {reset_url}
-            """
         frappe.sendmail(
             recipients=[email],
             sender="notifications@torous.ly",
-            subject="Torous: Password Reset",
+            subject="تروس: تغيير كلمة السر",
             expose_recipients=True,
             template="reset_password",
             args={
