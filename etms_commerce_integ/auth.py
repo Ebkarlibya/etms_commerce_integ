@@ -54,7 +54,7 @@ def request_password_reset():
         frappe.sendmail(
             recipients=[email],
             sender="notifications@torous.ly",
-            subject="تروس: تغيير كلمة السر",
+            subject="Torous: Password Reset",
             expose_recipients=True,
             template="reset_password",
             args={
