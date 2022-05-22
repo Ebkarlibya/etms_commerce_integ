@@ -94,6 +94,13 @@ def handle_password_reset():
         user.new_password = new_password
         user.reset_password_key = None
         
+        # Generate new api keys
+        api_secret = frappe.generate_hash(length=15)
+        api_key = frappe.generate_hash(length=15)
+
+        user.api_key = api_key
+        user.api_secret = api_secret
+        
         user.flags.ignore_permissions = True
         user.save()
 
@@ -146,6 +153,7 @@ def login():
             user = frappe.get_doc("User", _user.name)
             if user and _user["is_authenticated"]:
                 return {
+                    "message": "logged_in",
                     "user": user.name,
                     "api_key": user.api_key,
                     "api_secret": user.get_password("api_secret"),
@@ -200,6 +208,8 @@ def sign_up():
     user.flags.ignore_permissions = True
     user.flags.ignore_password_policy = True
 
+    user.send_welcome_email = False
+    
     user.insert()
     user.add_roles("Customer")
     # user.save()
