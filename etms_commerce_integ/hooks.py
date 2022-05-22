@@ -216,6 +216,11 @@ fixtures = [
         "mode_of_payment",
         "eci_expected_delivery_date",
         "eci_section",
-        "expected_territory_delivery_time")
+        "expected_territory_delivery_time",
+        # Customer Doctype
+        "eci_customer_section",
+        "eci_is_customer_email_verified",
+        "eci_email_confirmation_key",
+        "eci_mobile_no_2")
     ]]
 }]

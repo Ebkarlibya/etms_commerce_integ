@@ -108,7 +108,38 @@ def handle_password_reset():
     else:
         return {"message": "password_reset_rejected"}
 
+@frappe.whitelist(allow_guest=True, methods=["GET"])
+@eci_verify_request
+def request_confirmation_email():
+    email = frappe.form_dict["email"]
 
+    user_exist = frappe.db.get_value("User", filters={"name": email})
+
+    if user_exist:
+        customer = frappe.get_doc("Customer", user_exist)
+        confirmation_key = random_string(25)
+        customer.eci_email_confirmation_key = confirmation_key
+
+        customer.flags.ignore_mandatory = True
+        customer.flags.ignore_permissions = True
+        customer.save()
+
+        confirm_url = eci_settings.eci_domain + "/eci-confirm-email?key=" + confirmation_key
+
+        frappe.sendmail(
+            recipients=[user_exist],
+            sender="notifications@torous.ly",
+            subject="Torous: Confirm Registration",
+            reply_to="notifications@torous.ly",
+            template="confirm_email",
+            args={
+                "confirm_url": confirm_url
+                },
+                delayed=True
+        )
+        return {"message": "confirmation_email_sent"}
+    else:
+        return {"message": "faild"}
 
 @frappe.whitelist(allow_guest=False, methods=["GET"])
 @eci_verify_request
@@ -152,6 +183,12 @@ def login():
             _user = User.find_by_credentials(usr, pwd)
             user = frappe.get_doc("User", _user.name)
             if user and _user["is_authenticated"]:
+                customer_not_verified = frappe.get_value("Customer",
+                    fieldname="eci_is_customer_email_verified",
+                    filters={"name": user.name})
+                if customer_not_verified == 0:
+                    return {"message": "user_email_not_verified"}
+
                 return {
                     "message": "logged_in",
                     "user": user.name,
@@ -176,10 +213,18 @@ def sign_up():
     first_name = frappe.form_dict["first_name"]
     last_name = frappe.form_dict["last_name"]
     phone_number = frappe.form_dict["phone_number"]
+    phone_number2 = frappe.form_dict["phone_number2"]
+
 
     user_exist = frappe.db.get("User", username)
 
     if user_exist:
+        customer_not_verified = frappe.get_value("Customer",
+            fieldname="eci_is_customer_email_verified",
+            filters={"name": user_exist.name})
+        if customer_not_verified == 0:
+            return {"message": "user_email_not_verified"}
+
         return {"message": "user_already_exist"}
 
     if frappe.db.get_creation_count('User', 60) > 300:
@@ -230,12 +275,35 @@ def sign_up():
         frappe._("Individual"),
         "mobile_no":
         phone_number,
+        "eci_mobile_no_2": phone_number2,
         "default_price_list":
         eci_settings.default_signup_customer_price_list
     })
+
+    # generate confirmation key
+    confirmation_key = random_string(25)
+    customer.eci_email_confirmation_key = confirmation_key
+
 
     customer.flags.ignore_mandatory = True
     customer.flags.ignore_permissions = True
     customer.insert(ignore_permissions=True)
 
-    return {"user": user.name, "api_key": api_key, "api_secret": api_secret}
+    confirm_url = eci_settings.eci_domain + "/eci-confirm-email?key=" + confirmation_key
+
+    frappe.sendmail(
+        recipients=[user.email],
+        sender="notifications@torous.ly",
+        subject="Torous: Confirm Registration",
+        reply_to="notifications@torous.ly",
+        expose_recipients=True,
+        template="confirm_email",
+        args={
+            "confirm_url": confirm_url
+            },
+            delayed=True
+    )
+
+    return {"message": "registered_successfully"}
+    
+    # return {"user": user.name, "api_key": api_key, "api_secret": api_secret}
