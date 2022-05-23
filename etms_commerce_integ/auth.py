@@ -117,6 +117,9 @@ def request_confirmation_email():
 
     if user_exist:
         customer = frappe.get_doc("Customer", user_exist)
+        if customer.eci_is_customer_email_verified:
+            return {"message": "faild"}
+
         confirmation_key = random_string(25)
         customer.eci_email_confirmation_key = confirmation_key
 
