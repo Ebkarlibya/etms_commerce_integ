@@ -8,9 +8,8 @@ passwordMismatchAlert = document.querySelector("#password_mismatch_alert");
 passwordResetFaildAlert = document.querySelector("#password_reset_faild_alert");
 passwordWeakAlert = document.querySelector("#password_weak_alert");
 
-
-
 submitBtn = document.querySelector("#submitBtn");
+openAppBtn = document.querySelector("#open_app");
 
 submitBtn.addEventListener("click", function() {
 
@@ -44,6 +43,8 @@ submitBtn.addEventListener("click", function() {
                 newPassword.disabled = true;
                 repeatNewPassword.disabled = true;
                 submitBtn.disabled = true;
+                submitBtn.hidden = true;
+                openAppBtn.hidden = false;
             }
 
             if(r.message.message == "password_reset_rejected") {
@@ -69,7 +70,14 @@ submitBtn.addEventListener("click", function() {
 
 });
 
+openAppBtn.addEventListener("click", function(e) {
 
+    var url = "intent://torous.ly/#Intent;scheme=fluxstore;package=ly.ebkar.torous;end";
+
+    window.location.replace(url); 
+
+
+})
 
 function testPassword(pwString) {
     var strength = 0;
