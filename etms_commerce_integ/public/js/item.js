@@ -95,6 +95,14 @@ frappe.ui.form.on("Item", {
 
                         }
                     }
+                },
+                {
+                    fieldname: 'sec_break2',
+                    fieldtype: 'Section Break'
+                }, {
+                    label: frappe._('Note'),
+                    fieldname: 'compat_note',
+                    fieldtype: 'Small Text'
                 }],
                 primary_action_label: frappe._('Insert Vehicles'),
                 primary_action(values) {
@@ -104,6 +112,7 @@ frappe.ui.form.on("Item", {
                         r.vehicle_make = values.vehicle_make;
                         r.vehicle_model = values.vehicle_model;
                         r.vehicle_year = start;
+                        r.compat_note = values.compat_note;
                     }
                     refresh_field("eci_vehicle_compatibility");
                     d.hide();
