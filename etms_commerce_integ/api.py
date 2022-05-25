@@ -277,7 +277,8 @@ def products():
                 select vehicle_make, vehicle_model, vehicle_year,
                 compat_note
                 from `tabECI Vehicle Compatibility Table`
-                where parent='{prod.item_code}';
+                where parent='{prod.item_code}'
+                order by idx asc
                 """,
                 as_dict=True)
 
