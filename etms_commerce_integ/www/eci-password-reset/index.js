@@ -9,7 +9,21 @@ passwordResetFaildAlert = document.querySelector("#password_reset_faild_alert");
 passwordWeakAlert = document.querySelector("#password_weak_alert");
 
 submitBtn = document.querySelector("#submitBtn");
+showPassword = document.querySelector("#show_password");
 openAppBtn = document.querySelector("#open_app");
+
+var isPasswordVisible = false;
+showPassword.addEventListener("click", function() {
+    if(!isPasswordVisible) {
+        newPassword.type = "text";
+        repeatNewPassword.type = "text"
+        isPasswordVisible = true;
+    } else {
+        newPassword.type = "password";
+        repeatNewPassword.type = "password"
+        isPasswordVisible = false;
+    }
+});
 
 submitBtn.addEventListener("click", function() {
 
