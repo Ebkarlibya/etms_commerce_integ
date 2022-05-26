@@ -140,6 +140,7 @@ def products():
     products_list = []
     eci_products = []
 
+    # get product by id
     if "id" in q:
         sql_escaped_values["id"] = q["id"]
         sql_id_cond = """
@@ -150,7 +151,6 @@ def products():
         sql_escaped_values["search"] = f"%{q['search']}%"
         sql_term_cond = """
             and (
-                i.item_code like %(search)s
                 or i.item_name like %(search)s
                 or i.description like %(search)s)
 
@@ -190,7 +190,7 @@ def products():
 
     eci_products = frappe.db.sql(f"""
         select i.item_name, i.item_code, i.brand, i.description, i.eci_product_state,
-        i.has_specific_compatibility, i.standard_rate
+        i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note, i.has_warranty, i.warranty_note
 
         from `tabItem` i
         where i.publish_to_commerce_app = 1
@@ -301,6 +301,10 @@ def products():
             "sale_price": price,
             #"stock_quantity": 70,
             "in_stock": inStock,
+            "isInspected": prod.is_inspected,
+            "inspectionNote": prod.inspection_note,
+            "hasWarranty": prod.has_warranty,
+            "warrantyNote": prod.warranty_note,
             "condition": "0" if prod.eci_product_state == "New" else "1",
             "categories": product_categories,
             "vehicleCompatsList": vehicleCompatsList,
