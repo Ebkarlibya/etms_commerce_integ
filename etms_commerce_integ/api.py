@@ -6,8 +6,6 @@ from etms_commerce_integ.auth import eci_verify_request
 from etms_commerce_integ.utils import get_item_price
 
 
-DEBUG = False
-
 @frappe.whitelist(allow_guest=False)
 @eci_verify_request
 def upload_file():
@@ -134,6 +132,8 @@ def products():
     sql_id_cond = ""
     sql_term_cond = ""
     sql_brand_cond = ""
+    sql_is_inspected_cond = ""
+    sql_has_warranty_cond = ""
     sql_cat_cond = ""
     sql_comp_cond = ""
 
@@ -147,21 +147,46 @@ def products():
             and i.item_code = %(id)s
         """
 
+    # search box
     if "search" in q:
         sql_escaped_values["search"] = f"%{q['search']}%"
         sql_term_cond = """
             and (
-                or i.item_name like %(search)s
+                i.item_name like %(search)s
                 or i.description like %(search)s)
-
         """
 
+    # Extra filters
     if "brand" in q and q["brand"]:
         sql_escaped_values["brand"] = f"{q['brand']}"
         sql_brand_cond = """
             and i.brand = %(brand)s
         """
 
+    if "is_inspected" in q and q["is_inspected"]:
+
+        if q["is_inspected"] == "مع فحص الجودة":
+            sql_is_inspected_cond = """
+                and i.is_inspected = "Yes"
+            """
+        elif q["is_inspected"] == "بدون فحص الجودة":
+            sql_is_inspected_cond = """
+                and i.is_inspected = "No"
+            """
+
+    if "has_warranty" in q and q["has_warranty"]:
+
+        if q["has_warranty"] == "مع ضمان":
+            sql_has_warranty_cond = """
+                and i.has_warranty = "Yes"
+            """
+        if q["has_warranty"] == "بدون ضمان":
+            sql_has_warranty_cond = """
+                and i.has_warranty = "No"
+            """
+
+
+    # category search
     if "category" in q:
         sql_escaped_values["category"] = q["category"]
         sql_cat_cond = """
@@ -190,7 +215,8 @@ def products():
 
     eci_products = frappe.db.sql(f"""
         select i.item_name, i.item_code, i.brand, i.description, i.eci_product_state,
-        i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note, i.has_warranty, i.warranty_note
+        i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note,
+        i.has_warranty, i.warranty_note
 
         from `tabItem` i
         where i.publish_to_commerce_app = 1
@@ -198,9 +224,11 @@ def products():
         {sql_cat_cond}
         {sql_comp_cond}
         {sql_brand_cond}
+        {sql_is_inspected_cond}
+        {sql_has_warranty_cond}
         
         {sql_term_cond}
-    """, sql_escaped_values, as_dict=True, debug=DEBUG)
+    """, sql_escaped_values, as_dict=True, debug=False)
 
 
     for prod in eci_products:
@@ -309,11 +337,11 @@ def products():
             "categories": product_categories,
             "vehicleCompatsList": vehicleCompatsList,
             "tags": [
-                # {
-                #     "id": 664,
-                #     "name": "فلتر زيت افانتي",
-                #     "slug": "falatir-zait-avanti"
-                # }
+                {
+                    "id": 664,
+                    "name": "فلتر زيت افانتي",
+                    "slug": "falatir-zait-avanti"
+                }
             ],
             "images": product_images,
             "variations": [],
