@@ -33,6 +33,7 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Item" : "public/js/item.js",
+    "ECI Customer Vehicles" : "public/js/eci_customer_vehicles.js",
     "ECI Vehicle Make": "public/js/eci_vehicle_make.js",
     "ECI Vehicle Model": "public/js/eci_vehicle_model.js",
     # "ECI Parts Request": "public/js/eci_parts_request.js"
@@ -225,6 +226,6 @@ fixtures = [
         "eci_customer_section",
         "eci_is_customer_email_verified",
         "eci_email_confirmation_key",
-        "eci_mobile_no_2")
+        "eci_mobile_no_2",)
     ]]
 }]
