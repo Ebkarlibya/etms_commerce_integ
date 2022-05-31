@@ -128,19 +128,18 @@ def products():
     try:
         q = frappe.request.args
         eci_settings = frappe.get_single("ECI Commerce Settings")
-
-        per_page = 10
-        page = int(q['page']) - 1
-
-        offset = page * per_page
         
-
-        print(f"page: {page},  per_page: {per_page}")
+        per_page = 20
+        
+        if "page" in q:
+            page = int(q['page']) - 1
+        offset = page * per_page
 
         sql_escaped_values = {}
         sql_id_cond = ""
         sql_term_cond = ""
         sql_brand_cond = ""
+        sql_product_condition_cond = ""
         sql_is_inspected_cond = ""
         sql_has_warranty_cond = ""
         sql_cat_cond = ""
@@ -172,6 +171,16 @@ def products():
                 and i.brand = %(brand)s
             """
 
+        if "productCondition" in q and q["productCondition"]:
+            if q["productCondition"] == "جديد":
+                sql_product_condition_cond = """
+                    and i.eci_product_condition = "New"
+                """
+            elif q["productCondition"] == "مستعمل":
+                sql_product_condition_cond = """
+                    and i.eci_product_condition = "Used"
+                """
+        
         if "is_inspected" in q and q["is_inspected"]:
 
             if q["is_inspected"] == "مع فحص الجودة":
@@ -223,7 +232,7 @@ def products():
             """
 
         eci_products = frappe.db.sql(f"""
-            select i.item_name, i.item_code, i.brand, i.description, i.eci_product_state,
+            select i.item_name, i.item_code, i.brand, i.description, i.eci_product_condition,
             i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note,
             i.has_warranty, i.warranty_note
 
@@ -233,12 +242,14 @@ def products():
             {sql_cat_cond}
             {sql_comp_cond}
             {sql_brand_cond}
+            {sql_product_condition_cond}
             {sql_is_inspected_cond}
             {sql_has_warranty_cond}
             {sql_term_cond}
+
             order by creation desc
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=False)
+        """, sql_escaped_values, as_dict=True, debug=True)
 
 
         for prod in eci_products:
@@ -345,7 +356,7 @@ def products():
                 "inspectionNote": prod.inspection_note,
                 "hasWarranty": prod.has_warranty,
                 "warrantyNote": prod.warranty_note,
-                "condition": "0" if prod.eci_product_state == "New" else "1",
+                "productCondition": "0" if prod.eci_product_condition == "New" else "1",
                 "categories": product_categories,
                 "vehicleCompatsList": vehicleCompatsList,
                 "tags": [
