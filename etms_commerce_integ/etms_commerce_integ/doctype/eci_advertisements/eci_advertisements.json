@@ -8,7 +8,6 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "ad_image_preview",
   "ad_image"
  ],
  "fields": [
@@ -21,12 +20,6 @@
    "unique": 1
   },
   {
-   "depends_on": "eval:doc.ad_image",
-   "fieldname": "ad_image_preview",
-   "fieldtype": "Image",
-   "label": "Ad Image Preview"
-  },
-  {
    "fieldname": "ad_image",
    "fieldtype": "Attach Image",
    "label": "Ad Image"
@@ -34,7 +27,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-05-31 09:29:02.693883",
+ "modified": "2022-06-01 11:07:18.670504",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Advertisements",

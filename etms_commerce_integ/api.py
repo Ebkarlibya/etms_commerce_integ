@@ -129,8 +129,9 @@ def products():
         q = frappe.request.args
         eci_settings = frappe.get_single("ECI Commerce Settings")
         
+        page = 0
         per_page = 20
-        
+
         if "page" in q:
             page = int(q['page']) - 1
         offset = page * per_page
@@ -265,9 +266,7 @@ def products():
                 """,
                 as_dict=True)
             if len(product_warehouses) < 1:
-                # print("WAREHOUSE ################")
-                pass
-                # continue
+                continue
 
             # get product price
             price = get_item_price(prod.item_code)
