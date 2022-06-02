@@ -1,3 +1,4 @@
+from re import I
 import frappe
 from etms_commerce_integ.auth import eci_verify_request
 from etms_commerce_integ.auth import eci_log_error
@@ -20,16 +21,30 @@ def save_customer_vehicle():
         vehicle_make = frappe.form_dict["vehicle_make"]
         vehicle_model = frappe.form_dict["vehicle_model"]
         vehicle_year = frappe.form_dict["vehicle_year"]
-
-        customer_vehicles = frappe.get_doc("ECI Customer Vehicles",
-                                           frappe.session.user)
+    
+        customer_vehicles = None
+        
+        if len(frappe.get_all("ECI Customer Vehicles", filters={"name": frappe.session.user})) < 1:
+            customer_vehicles = frappe.get_doc(
+                {
+                    "doctype": "ECI Customer Vehicles",
+                    "customer": frappe.session.user
+                }
+            )
+            customer_vehicles.flags.ignore_permissions=True
+            customer_vehicles.insert()
+        else:
+            customer_vehicles = frappe.get_doc("ECI Customer Vehicles",
+                                            frappe.session.user)
 
         row = customer_vehicles.append("customer_vehicles", {})
         row.vehicle_make = vehicle_make
         row.vehicle_model = vehicle_model
         row.vehicle_year = vehicle_year
 
-        row.save()
+        customer_vehicles.flags.ignore_permissions=True
+        customer_vehicles.save()
+        frappe.db.commit()
 
         vehicles = frappe.get_all(
             "ECI Customer Vehicles Table",

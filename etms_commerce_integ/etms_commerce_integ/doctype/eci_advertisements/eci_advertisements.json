@@ -27,6 +27,7 @@
    "label": "Ad Image"
   },
   {
+   "description": "\u062d\u062f\u062f \u062a\u0631\u062a\u064a\u0628 \u0627\u0644\u0639\u0631\u0636 \u0641\u064a \u0627\u0644\u062a\u0637\u0628\u064a\u0642: 10, 20, 40, 50 \u0625\u0644\u062e....",
    "fieldname": "display_order",
    "fieldtype": "Int",
    "in_list_view": 1,
@@ -43,7 +44,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-02 09:47:12.642976",
+ "modified": "2022-06-02 10:50:06.639444",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Advertisements",
