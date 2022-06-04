@@ -39,6 +39,17 @@
    "link_to": "ECI Category",
    "link_type": "DocType",
    "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Product Tags",
+   "link_to": "ECI Product Tags",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
    "type": "Link"
   },
   {
@@ -56,6 +67,7 @@
    "label": "Orders",
    "link_type": "DocType",
    "onboard": 0,
+   "only_for": "",
    "type": "Card Break"
   },
   {
@@ -208,7 +220,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-31 10:32:32.562342",
+ "modified": "2022-06-02 16:41:46.734025",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",

@@ -144,10 +144,10 @@ def products():
         sql_is_inspected_cond = ""
         sql_has_warranty_cond = ""
         sql_cat_cond = ""
+        sql_tag_cond = ""
         sql_comp_cond = ""
 
         products_list = []
-        eci_products = []
 
         # get product by id
         if "id" in q:
@@ -159,10 +159,18 @@ def products():
         # search box
         if "search" in q:
             sql_escaped_values["search"] = f"%{q['search']}%"
+            sql_escaped_values["tagterm"] = f"{q['search']}"
+
             sql_term_cond = """
                 and (
                     i.item_name like %(search)s
-                    or i.description like %(search)s)
+                    or i.description like %(search)s
+                    or %(tagterm)s in (
+                        select tag_name from `tabECI Product Tags Table`
+                        where parent = i.item_code
+                        and tag_name = %(tagterm)s
+                    )
+                )
             """
 
         # Extra filters
@@ -216,6 +224,17 @@ def products():
                     and i.item_code = c.parent
                 )
             """
+        
+        # tags search
+        if "tag" in q:
+            sql_escaped_values["tag"] = q["tag"]
+            sql_tag_cond = """
+                and exists (
+                    select tag_name from `tabECI Product Tags Table`
+                    where parent = i.item_code
+                    and tag_name = %(tag)s
+                )
+            """
 
         if "veh-compat-make" in q:
             sql_escaped_values["veh-compat-make"] = q["veh-compat-make"]
@@ -235,9 +254,11 @@ def products():
         eci_products = frappe.db.sql(f"""
             select i.item_name, i.item_code, i.brand, i.description, i.eci_product_condition,
             i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note,
-            i.has_warranty, i.warranty_note
+            i.has_warranty, i.warranty_note, sum(b.actual_qty) prod_total_whs_qty
 
             from `tabItem` i
+            inner join `tabBin` b
+            on i.item_code = b.item_code
             where i.publish_to_commerce_app = 1
             {sql_id_cond}
             {sql_cat_cond}
@@ -247,45 +268,46 @@ def products():
             {sql_is_inspected_cond}
             {sql_has_warranty_cond}
             {sql_term_cond}
+            {sql_tag_cond}
 
-            order by creation desc
+            group by i.item_code
+            order by i.creation
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=True)
+        """, sql_escaped_values, as_dict=True, debug=False)
 
 
         for prod in eci_products:
             # if product not in publish warehouses skip
-            product_warehouses = frappe.db.sql(f"""
-                select warehouse, actual_qty
-                from `tabBin` where item_code = '{prod.item_code}'
-                and warehouse in (
-                    select warehouse
-                    from `tabECI Publish Warehouses Table`
-                    where parent='{prod.item_code}'
-                    )
-                """,
-                as_dict=True)
-            if len(product_warehouses) < 1:
-                continue
+            # filtered using sql
+            # product_warehouses = frappe.db.sql(f"""
+            #     select warehouse, actual_qty
+            #     from `tabBin` where item_code = '{prod.item_code}'
+            #     and warehouse in (
+            #         select warehouse
+            #         from `tabECI Publish Warehouses Table`
+            #         where parent='{prod.item_code}'
+            #         )
+            #     """,
+            #     as_dict=True)
 
-            # get product price
+            # Get product price
             price = get_item_price(prod.item_code)
 
 
-            # is the product available in stock
-            actual_qty = 0
-            for item in product_warehouses:
-                actual_qty += item[
-                    "actual_qty"]  # sum qty in all eci published warehouses
-            inStock = True if actual_qty >= 1 else False
+            # Is the product available in stock
+            # actual_qty = 0
+            # for item in product_warehouses:
+            #     actual_qty += item[
+            #         "actual_qty"]  # sum qty in all eci published warehouses
+            inStock = True if prod.prod_total_whs_qty >= 1 else False
 
-            # get product categories
+            # Get product categories
+            product_categories = []
             _product_categories = frappe.get_all(
                 "ECI Categories Table",
                 fields=["category_name", "sub_category_1"],
                 filters={"parent": prod.item_code})
 
-            product_categories = []
             for prod_cat in _product_categories:
                 if prod_cat.category_name:
                     product_categories.append({
@@ -299,16 +321,30 @@ def products():
                         "name": prod_cat.sub_category_1,
                         "slug": prod_cat.sub_category_1
                     })
+            # Get product tags
+            product_tags = []
+            _product_tags = frappe.get_all(
+                "ECI Product Tags Table",
+                fields=["name", "tag_name"],
+                filters={"parent": prod.item_code})
 
-            # get product images
+            for tag in _product_tags:
+                product_tags.append(
+                    {
+                        "id": tag.name, 
+                        "name": tag.tag_name,
+                        "slug": "-".join(tag.tag_name.split(' '))
+                    }
+                )
+
+            # Get product images
+            product_images = []
             _product_images = frappe.get_all(
                 "ECI Product Images Table",
                 fields=["product_image", "image_title"],
                 filters={"parent": prod.item_code},
                 order_by="idx asc")
 
-            product_images = []
-            
             for pImage in _product_images:
                 if pImage.product_image:
                     product_images.append(
@@ -320,7 +356,7 @@ def products():
                         } 
                     )
 
-            # get product vehicle compatibility
+            # Get product vehicle compatibility
             vehicleCompatsList = []
             if prod.has_specific_compatibility == 1:
                 vehicleCompatsList = frappe.db.sql(f"""
@@ -358,13 +394,7 @@ def products():
                 "productCondition": "0" if prod.eci_product_condition == "New" else "1",
                 "categories": product_categories,
                 "vehicleCompatsList": vehicleCompatsList,
-                "tags": [
-                    {
-                        "id": 664,
-                        "name": "فلتر زيت افانتي",
-                        "slug": "falatir-zait-avanti"
-                    }
-                ],
+                "tags": product_tags,
                 "images": product_images,
                 "variations": [],
                 "attributes": [{
@@ -456,4 +486,5 @@ def products():
         return products_list
     except Exception as e:
         eci_log_error()
+        print(e)
         return []

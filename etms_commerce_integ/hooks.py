@@ -211,6 +211,7 @@ fixtures = [
         "warranty_note",
         "warehouses_to_check_item_availability",
         "eci_categories",
+        "eci_product_tags_multiselect",
         "eci_product_images",
         "has_specific_compatibility",
         "eci_vehicle_compatibility",
