@@ -1,8 +1,8 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{tag_name}",
- "creation": "2022-06-02 16:32:39.423183",
+ "autoname": "field:tag_name",
+ "creation": "2022-06-04 14:15:04.398100",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -13,12 +13,13 @@
   {
    "fieldname": "tag_name",
    "fieldtype": "Data",
-   "label": "Tag Name"
+   "label": "Tag Name",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-02 16:32:39.423183",
+ "modified": "2022-06-04 14:15:04.398100",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Product Tags",
