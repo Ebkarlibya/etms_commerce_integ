@@ -173,6 +173,17 @@ def products():
                 )
             """
 
+        # search box tags
+        if "tag" in q and q["tag"]:
+            sql_escaped_values["tag"] = q["tag"]
+            sql_tag_cond = """
+                and exists (
+                    select tag_name from `tabECI Product Tags Table`
+                    where parent = i.item_code
+                    and tag_name = %(tag)s
+                )
+            """
+
         # Extra filters
         if "brand" in q and q["brand"]:
             sql_escaped_values["brand"] = f"{q['brand']}"
@@ -224,17 +235,6 @@ def products():
                     and i.item_code = c.parent
                 )
             """
-        
-        # tags search
-        if "tag" in q:
-            sql_escaped_values["tag"] = q["tag"]
-            sql_tag_cond = """
-                and exists (
-                    select tag_name from `tabECI Product Tags Table`
-                    where parent = i.item_code
-                    and tag_name = %(tag)s
-                )
-            """
 
         if "veh-compat-make" in q:
             sql_escaped_values["veh-compat-make"] = q["veh-compat-make"]
@@ -273,7 +273,7 @@ def products():
             group by i.item_code
             order by i.creation
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=False)
+        """, sql_escaped_values, as_dict=True, debug=True)
 
 
         for prod in eci_products:
