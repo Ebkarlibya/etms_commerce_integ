@@ -61,3 +61,16 @@ def search_payment_methods():
                                 )
 
     return payment_methods
+
+
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@eci_verify_request
+def autocomplete_search():
+    term = frappe.form_dict['term']
+
+    sugesstions = frappe.get_all("ECI Product Tags",
+                            fields=["name"],
+                            filters=[
+                                ["name", "like", f"%{term}%"]
+                            ])
+    return sugesstions
