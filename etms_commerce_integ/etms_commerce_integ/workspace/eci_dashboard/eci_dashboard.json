@@ -77,6 +77,17 @@
    "link_to": "Sales Order",
    "link_type": "DocType",
    "onboard": 0,
+   "only_for": "",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Parts Request",
+   "link_to": "ECI Parts Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": "",
    "type": "Link"
   },
   {
@@ -220,7 +231,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-06-02 16:41:46.734025",
+ "modified": "2022-06-06 21:53:30.562091",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",
