@@ -75,9 +75,11 @@ def get_expected_delivery_time():
                 all_warehouses_enough = False
 
     if all_warehouses_enough and not iswhmax:
-        return add_to_date(nowdate(), days=min(delivery_days))
+        expected_date =  add_to_date(nowdate(), days=min(delivery_days))
+        return expected_date
     else:
-        return add_to_date(nowdate(), days=min(delivery_days))
+        expected_date = add_to_date(nowdate(), days=min(delivery_days))
+        return expected_date
 
 
     #        Finished Goods - ET       6       10  days

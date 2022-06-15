@@ -61,7 +61,7 @@ def request_password_reset():
             args={
                 "reset_url": reset_url
             },
-            delayed=True
+            delayed=False
         )
         return {"message": "password_reset_request_accepted"}
     else:
@@ -114,7 +114,7 @@ def request_confirmation_email():
     email = frappe.form_dict["email"]
 
     user_exist = frappe.db.get_value("User", filters={"name": email})
-
+    
     if user_exist:
         customer = frappe.get_doc("Customer", user_exist)
         if customer.eci_is_customer_email_verified:
@@ -130,15 +130,16 @@ def request_confirmation_email():
         confirm_url = eci_settings.eci_domain + "/eci-confirm-email?key=" + confirmation_key
 
         frappe.sendmail(
-            recipients=[user_exist],
+            recipients=[email],
             sender="notifications@torous.ly",
-            subject="Torous: Confirm Registration",
+            subject="Torous: Confirm Your Email",
             reply_to="notifications@torous.ly",
+            expose_recipients=True,
             template="confirm_email",
             args={
                 "confirm_url": confirm_url
-                },
-                delayed=True
+            },
+            delayed=False
         )
         return {"message": "confirmation_email_sent"}
     else:
@@ -304,7 +305,7 @@ def sign_up():
         args={
             "confirm_url": confirm_url
             },
-            delayed=True
+            delayed=False
     )
 
     return {"message": "registered_successfully"}
