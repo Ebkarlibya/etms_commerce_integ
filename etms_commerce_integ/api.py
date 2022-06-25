@@ -275,7 +275,7 @@ def products():
             limit {offset},{per_page}
         """, sql_escaped_values, as_dict=True, debug=True)
 
-
+        frappe.get_all()
         for prod in eci_products:
             # if product not in publish warehouses skip
             # filtered using sql

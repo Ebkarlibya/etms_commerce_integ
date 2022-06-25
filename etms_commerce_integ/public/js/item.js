@@ -153,3 +153,13 @@ frappe.ui.form.on("ECI Product Images Table", {
     }
 });
 
+
+frappe.ui.form.on("ECI Supplier Warehouse Table", {
+	supplier: function(frm, cdt, cdn) {
+		var row = frappe.get_doc(cdt, cdn)
+		frappe.db.get_value("ECI Supplier Warehouse", {name: row.supplier}, "supplier_warehouse_name").then(function(r) {
+				row.supplier_warehouse = r.message.supplier_warehouse_name;
+				cur_frm.refresh_fields()
+		})
+	}
+})

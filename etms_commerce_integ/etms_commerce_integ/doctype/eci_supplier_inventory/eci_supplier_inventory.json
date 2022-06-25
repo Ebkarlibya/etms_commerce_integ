@@ -1,0 +1,111 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ECISW-{YYYY}-{MM}-{####}",
+ "creation": "2022-06-23 17:01:35.703248",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_warehouse",
+  "supplier_warehouse_name",
+  "product",
+  "column_break_3",
+  "quantity",
+  "product_condition",
+  "section_break_6",
+  "supplier_pricelyd",
+  "supplier_part_number_if_any",
+  "column_break_9",
+  "last_update"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier Warehouse",
+   "options": "ECI Supplier Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Product",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "product.eci_product_condition",
+   "fieldname": "product_condition",
+   "fieldtype": "Data",
+   "label": "Product Condition",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier_pricelyd",
+   "fieldtype": "Currency",
+   "label": "Supplier Price(LYD)"
+  },
+  {
+   "fieldname": "supplier_part_number_if_any",
+   "fieldtype": "Data",
+   "label": "Supplier Part Number (If any)"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_update",
+   "fieldtype": "Datetime",
+   "label": "Last Update",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "supplier_warehouse.supplier_warehouse_name",
+   "fieldname": "supplier_warehouse_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Warehouse Name",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-06-25 10:29:24.031365",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Supplier Inventory",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

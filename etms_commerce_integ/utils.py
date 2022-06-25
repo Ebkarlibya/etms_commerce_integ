@@ -43,3 +43,18 @@ def get_item_price(item_code):
     except Exception as e:
         eci_log_error()
         return item_price
+
+@frappe.whitelist(allow_guest=True)
+def get_item_quantity(item_code, warehouse=None):
+    conds = {"item_code": item_code}
+    total_quantity = 0
+
+    if warehouse:
+        conds["warehouse"] = warehouse
+
+    bins = frappe.get_all("Bin", fields=["actual_qty"], filters=conds)
+
+    for bin in bins:
+        total_quantity += bin["actual_qty"]
+    
+    return total_quantity

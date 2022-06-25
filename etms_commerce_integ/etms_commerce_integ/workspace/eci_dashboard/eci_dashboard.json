@@ -229,9 +229,35 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Multi Vendor",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Inventories",
+   "link_to": "ECI Supplier Inventory",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Warehouses",
+   "link_to": "ECI Supplier Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-06-06 21:53:30.562091",
+ "modified": "2022-06-25 10:23:49.176751",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",

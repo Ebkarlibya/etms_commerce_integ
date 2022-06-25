@@ -77,4 +77,5 @@ def autocomplete_search():
                                 ["name", "like", f"%{term}%"]
                             ],
                             limit_page_length=6)
+
     return sugesstions

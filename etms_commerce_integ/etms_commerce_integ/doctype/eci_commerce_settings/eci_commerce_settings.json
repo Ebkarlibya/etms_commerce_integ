@@ -37,13 +37,15 @@
   {
    "fieldname": "api_key",
    "fieldtype": "Data",
-   "label": "API Key"
+   "label": "API Key",
+   "reqd": 1
   },
   {
    "columns": 11,
    "fieldname": "api_secret",
    "fieldtype": "Password",
-   "label": "API Secret"
+   "label": "API Secret",
+   "reqd": 1
   },
   {
    "default": "1",
@@ -105,13 +107,14 @@
    "fieldname": "default_signup_customer_price_list",
    "fieldtype": "Link",
    "label": "Default SignUp Customer Price List",
-   "options": "Price List"
+   "options": "Price List",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-05-12 14:27:07.068374",
+ "modified": "2022-06-19 09:57:52.542035",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Commerce Settings",
