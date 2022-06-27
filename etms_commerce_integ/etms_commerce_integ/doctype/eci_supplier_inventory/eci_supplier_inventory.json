@@ -8,7 +8,6 @@
  "engine": "InnoDB",
  "field_order": [
   "supplier_warehouse",
-  "supplier_warehouse_name",
   "product",
   "column_break_3",
   "quantity",
@@ -24,6 +23,7 @@
   {
    "fieldname": "supplier_warehouse",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Supplier Warehouse",
    "options": "ECI Supplier Warehouse",
    "reqd": 1
@@ -74,14 +74,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "supplier_warehouse.supplier_warehouse_name",
-   "fieldname": "supplier_warehouse_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Supplier Warehouse Name",
-   "read_only": 1
-  },
-  {
    "fieldname": "supplier_price",
    "fieldtype": "Currency",
    "label": "Supplier Price"
@@ -96,7 +88,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-26 09:16:56.951245",
+ "modified": "2022-06-27 11:53:49.183558",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Inventory",

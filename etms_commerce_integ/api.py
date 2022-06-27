@@ -254,7 +254,8 @@ def products():
         eci_products = frappe.db.sql(f"""
             select i.item_name, i.item_code, i.brand, i.description, i.eci_product_condition,
             i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note,
-            i.has_warranty, i.warranty_note, i.eci_check_availability_in_suppliers_warehouse
+            i.has_warranty, i.warranty_note, i.eci_check_availability_in_suppliers_warehouse,
+            i.eci_mfr_part_number
 
             from `tabItem` i
             where i.publish_to_commerce_app = 1
@@ -270,7 +271,7 @@ def products():
 
             order by i.creation
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=True)
+        """, sql_escaped_values, as_dict=True, debug=False)
 
         for prod in eci_products:
 
@@ -362,6 +363,7 @@ def products():
                 "featured": False,
                 #"catalog_visibility": "visible",
                 "brand": prod.brand,
+                "mfr_part_number": prod.eci_mfr_part_number,
                 "description": prod.description,
                 #"short_description": prod.description,
                 #"sku": "asd-dsa-dsa",

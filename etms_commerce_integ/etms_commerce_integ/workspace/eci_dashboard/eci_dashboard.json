@@ -102,16 +102,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Warehouse Expected Delivery Time",
-   "link_to": "Warehouse",
-   "link_type": "DocType",
-   "onboard": 0,
-   "only_for": "",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Vehicle Compatibility",
    "link_to": "ECI Vehicle Make",
    "link_type": "DocType",
@@ -189,6 +179,7 @@
    "label": "Users & Accounts",
    "link_type": "DocType",
    "onboard": 0,
+   "only_for": "",
    "type": "Card Break"
   },
   {
@@ -236,6 +227,7 @@
    "label": "Multi Vendor",
    "link_type": "DocType",
    "onboard": 0,
+   "only_for": "",
    "type": "Card Break"
   },
   {
@@ -257,14 +249,14 @@
    "type": "Link"
   }
  ],
- "modified": "2022-06-25 10:23:49.176751",
+ "modified": "2022-06-27 11:51:39.799302",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Dashboard",
  "onboarding": "",
  "owner": "Administrator",
- "pin_to_bottom": 1,
- "pin_to_top": 0,
+ "pin_to_bottom": 0,
+ "pin_to_top": 1,
  "shortcuts": [
   {
    "color": "#138a19",

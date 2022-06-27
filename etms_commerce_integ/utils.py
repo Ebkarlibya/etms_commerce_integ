@@ -144,9 +144,9 @@ def get_item_warehouses(item_code: str, mode: int = 0):
 
         # get eci supplier item warehouses
         supplier_inventories = frappe.db.sql("""
-            select supplier_warehouse_name from `tabECI Supplier Inventory` sinv
+            select supplier_warehouse from `tabECI Supplier Inventory` sinv
             where product = %(item_code)s
-            group by supplier_warehouse_name
+            group by supplier_warehouse
             order by modified desc
         """, {"item_code": item_code}, as_dict=False)
 
@@ -167,9 +167,9 @@ def get_item_warehouses(item_code: str, mode: int = 0):
         return item_warehouses
     elif mode == 2:
         supplier_inventories = frappe.db.sql("""
-            select supplier_warehouse_name from `tabECI Supplier Inventory` sinv
+            select supplier_warehouse from `tabECI Supplier Inventory` sinv
             where product = %(item_code)s
-            group by supplier_warehouse_name
+            group by supplier_warehouse
             order by modified desc
         """, {"item_code": item_code}, as_dict=False)
         

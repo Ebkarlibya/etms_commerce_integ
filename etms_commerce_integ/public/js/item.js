@@ -132,6 +132,7 @@ frappe.ui.form.on("Item", {
                 item_code: frm.doc.item_code
             },
             callback: function (r) {
+                if(r.message == undefined || r.message.length == 0) return;
                 let html = "";
                 
                 for (let entry of r.message) {
