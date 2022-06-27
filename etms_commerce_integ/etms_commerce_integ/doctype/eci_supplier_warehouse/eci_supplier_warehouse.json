@@ -1,14 +1,15 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:ECISW-{YYYY}-{MM}-{####}",
+ "autoname": "field:supplier_warehouse_name",
  "creation": "2022-06-23 16:58:08.523860",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "supplier_name",
-  "supplier_warehouse_name"
+  "supplier_warehouse_name",
+  "warehouse_expected_delivery_date"
  ],
  "fields": [
   {
@@ -24,12 +25,20 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Supplier Warehouse Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "warehouse_expected_delivery_date",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Warehouse Expected Delivery Date",
+   "options": "ECI Warehouse Expected Delivery Date Table"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-23 17:02:56.800218",
+ "modified": "2022-06-26 20:55:57.013501",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Warehouse",

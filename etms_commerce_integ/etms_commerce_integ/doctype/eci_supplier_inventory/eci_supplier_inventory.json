@@ -14,7 +14,8 @@
   "quantity",
   "product_condition",
   "section_break_6",
-  "supplier_pricelyd",
+  "supplier_price",
+  "currency",
   "supplier_part_number_if_any",
   "column_break_9",
   "last_update"
@@ -23,7 +24,6 @@
   {
    "fieldname": "supplier_warehouse",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Supplier Warehouse",
    "options": "ECI Supplier Warehouse",
    "reqd": 1
@@ -31,6 +31,7 @@
   {
    "fieldname": "product",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Product",
    "options": "Item",
    "reqd": 1
@@ -45,13 +46,9 @@
   {
    "fieldname": "quantity",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Quantity",
    "reqd": 1
-  },
-  {
-   "fieldname": "supplier_pricelyd",
-   "fieldtype": "Currency",
-   "label": "Supplier Price(LYD)"
   },
   {
    "fieldname": "supplier_part_number_if_any",
@@ -83,11 +80,23 @@
    "in_list_view": 1,
    "label": "Supplier Warehouse Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "supplier_price",
+   "fieldtype": "Currency",
+   "label": "Supplier Price"
+  },
+  {
+   "default": "LYD",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-25 10:29:24.031365",
+ "modified": "2022-06-26 09:16:56.951245",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Inventory",

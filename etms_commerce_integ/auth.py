@@ -28,6 +28,7 @@ def eci_verify_request(func):
 
         except Exception as e:
             eci_log_error()
+            print(frappe.get_traceback())
             print(e.args)
             return {"message": "internal_server_error"}
 

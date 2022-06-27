@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 import re
+from etms_commerce_integ.utils import get_item_quantity, get_item_warehouses, get_warehouse_delivery_days
 from frappe.utils import add_to_date, now, nowdate
 import frappe
 from etms_commerce_integ.auth import eci_verify_request
@@ -23,67 +24,6 @@ def get_shipping_cost():
         return shipping_items[0]['standard_rate']
     return 0.0
 
-
-@frappe.whitelist(allow_guest=True, methods=['POST'])
-@eci_verify_request
-def get_expected_delivery_time():
-    territory = frappe.form_dict["territory"]
-    line_items = frappe.form_dict["line_items"]
-
-    warehouses = {}
-    delivery_days = []
-    all_warehouses_enough = False
-    # for each Product
-    for item in line_items:
-        item_warehouses = frappe.get_all("Bin",
-                                         fields=["warehouse", "actual_qty"],
-                                         filters={"item_code": item})
-        # Get Product warehouses
-        _items = []
-        for wh in item_warehouses:
-            whOrm = frappe.get_doc("Warehouse", wh.warehouse)
-            wh_delivery_dates = whOrm.expected_territory_delivery_time
-
-            # expected delivery days of this warehouse
-            for row in wh_delivery_dates:
-                if row.territory == territory:
-                    _items.append({
-                        "warehouse":
-                        wh.warehouse,
-                        "required_qty":
-                        line_items[item],
-                        "actual_qty":
-                        wh.actual_qty,
-                        "delivery_days":
-                        row.expected_delivery_days,
-                        "is_enough":
-                        wh.get("actual_qty") >= line_items[item]
-                    })
-        _items = sorted(_items, key=lambda x: x['actual_qty'], reverse=True)
-        warehouses[item] = _items
-
-    # calculate the delivery days
-    iswhmax = False
-    for prod in warehouses:
-        for prod_wh in warehouses[prod]:
-            delivery_days.append(prod_wh.get("delivery_days"))
-
-            if prod_wh.get("actual_qty") >= prod_wh.get("required_qty"):
-                all_warehouses_enough = True
-            else:
-                iswhmax = True
-                all_warehouses_enough = False
-
-    if all_warehouses_enough and not iswhmax:
-        expected_date =  add_to_date(nowdate(), days=min(delivery_days))
-        return expected_date
-    else:
-        expected_date = add_to_date(nowdate(), days=min(delivery_days))
-        return expected_date
-
-
-    #        Finished Goods - ET       6       10  days
-    #        Stores - ET              46        2  days
 @frappe.whitelist(allow_guest=False, methods=["POST"])
 @eci_verify_request
 def checkout():
@@ -212,6 +152,113 @@ def customer_orders():
             "shipping_total": order.eci_shipping_cost
         })
     return customer_orders
+
+# @frappe.whitelist(allow_guest=True, methods=['POST'])
+# @eci_verify_request
+# def get_expected_delivery_time4():
+#     # territory = frappe.form_dict["territory"]
+#     # line_items = frappe.form_dict["line_items"]
+
+#     territory = "طرابلس"
+#     line_items = {"281134H000": 98}
+
+#     warehouses = {}
+#     delivery_days = []
+#     all_warehouses_enough = False
+
+#     # for each Product
+#     for item in line_items:
+#         # get this item warehouses
+#         item_warehouses = get_item_warehouses(item)
+
+#         _items = []
+
+#         for itm_whs in item_warehouses:
+#             # get this warehouse delivery days
+#             expected_ddays = get_warehouse_delivery_days(itm_whs, territory)
+#             if not expected_ddays:
+#                 continue
+
+
+#             _items.append({
+#                 "warehouse": itm_whs,
+#                 "delivery_days": expected_ddays,
+#             })
+
+#         # _items = sorted(_items, key=lambda x: x['delivery_days'], reverse=True)
+#         warehouses[item] = _items
+
+#     # # calculate the delivery days
+#     iswhmax = False
+#     # for prod in warehouses:
+
+
+# @frappe.whitelist(allow_guest=True, methods=['POST'])
+# @eci_verify_request
+# def get_expected_delivery_time():
+#     # territory = frappe.form_dict["territory"]
+#     # line_items = frappe.form_dict["line_items"]
+
+#     territory = "طرابلس"
+#     line_items = {"281134H000": 1}
+
+#     warehouses = {}
+#     delivery_days = []
+#     all_warehouses_enough = False
+
+#     # for each Product
+#     for item in line_items:
+#         item_warehouses = frappe.get_all("Bin",
+#                                          fields=["warehouse", "actual_qty"],
+#                                          filters={"item_code": item})
+
+#         supplier_item_warehouses = frappe.get_all("ECI Supplier Inventory",
+#                                          fields=["supplier_warehouse_name as warehouse", "quantity as actual_qty"],
+#                                          filters={"product": item},
+#                                          order_by="modified desc")
+
+#         if len(supplier_item_warehouses) > 0:
+#             item_warehouses.append(supplier_item_warehouses[0])
+
+#         # Get Product warehouses
+#         _items = []
+#         for wh in item_warehouses:
+#             frappe.flags.ignore_permissions = True
+#             whOrm = frappe.get_doc("Warehouse", wh.warehouse)
+#             wh_delivery_dates = whOrm.expected_territory_delivery_time
+
+#             # expected delivery days of this warehouse
+#             for row in wh_delivery_dates:
+#                 if row.territory == territory:
+#                     _items.append({
+#                         "warehouse": wh.warehouse,
+#                         "required_qty": line_items[item],
+#                         "actual_qty": wh.actual_qty,
+#                         "delivery_days": row.expected_delivery_days,
+#                         "is_enough": wh.get("actual_qty") >= line_items[item]
+#                     })
+
+#         _items = sorted(_items, key=lambda x: x['actual_qty'], reverse=True)
+#         warehouses[item] = _items
+
+#     # calculate the delivery days
+#     iswhmax = False
+#     for prod in warehouses:
+#         for prod_wh in warehouses[prod]:
+#             delivery_days.append(prod_wh.get("delivery_days"))
+
+#             if prod_wh.get("actual_qty") >= prod_wh.get("required_qty"):
+#                 all_warehouses_enough = True
+#             else:
+#                 iswhmax = True
+#                 all_warehouses_enough = False
+
+#     if all_warehouses_enough and not iswhmax:
+#         expected_date =  add_to_date(nowdate(), days=min(delivery_days))
+#         return expected_date
+#     else:
+#         expected_date = add_to_date(nowdate(), days=min(delivery_days))
+#         return expected_date
 
 
 # @frappe.whitelist(allow_guest=False, methods=['GET'])

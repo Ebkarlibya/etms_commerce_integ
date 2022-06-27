@@ -3,7 +3,7 @@ from frappe.utils import get_url
 from frappe.desk.treeview import get_children
 from urllib.parse import unquote
 from etms_commerce_integ.auth import eci_verify_request
-from etms_commerce_integ.utils import eci_log_error, get_item_price
+from etms_commerce_integ.utils import eci_log_error, get_item_price, get_item_quantity
 
 
 @frappe.whitelist(allow_guest=False)
@@ -254,11 +254,9 @@ def products():
         eci_products = frappe.db.sql(f"""
             select i.item_name, i.item_code, i.brand, i.description, i.eci_product_condition,
             i.has_specific_compatibility, i.standard_rate, i.is_inspected, i.inspection_note,
-            i.has_warranty, i.warranty_note, sum(b.actual_qty) prod_total_whs_qty
+            i.has_warranty, i.warranty_note, i.eci_check_availability_in_suppliers_warehouse
 
             from `tabItem` i
-            inner join `tabBin` b
-            on i.item_code = b.item_code
             where i.publish_to_commerce_app = 1
             {sql_id_cond}
             {sql_cat_cond}
@@ -270,36 +268,23 @@ def products():
             {sql_term_cond}
             {sql_tag_cond}
 
-            group by i.item_code
             order by i.creation
             limit {offset},{per_page}
         """, sql_escaped_values, as_dict=True, debug=True)
 
-        frappe.get_all()
         for prod in eci_products:
-            # if product not in publish warehouses skip
-            # filtered using sql
-            # product_warehouses = frappe.db.sql(f"""
-            #     select warehouse, actual_qty
-            #     from `tabBin` where item_code = '{prod.item_code}'
-            #     and warehouse in (
-            #         select warehouse
-            #         from `tabECI Publish Warehouses Table`
-            #         where parent='{prod.item_code}'
-            #         )
-            #     """,
-            #     as_dict=True)
+
+            # Check product stock values
+            product_quantity = get_item_quantity(prod.item_code)
+            if product_quantity == None:
+                continue
 
             # Get product price
             price = get_item_price(prod.item_code)
 
 
-            # Is the product available in stock
-            # actual_qty = 0
-            # for item in product_warehouses:
-            #     actual_qty += item[
-            #         "actual_qty"]  # sum qty in all eci published warehouses
-            inStock = True if prod.prod_total_whs_qty >= 1 else False
+
+            inStock = True if product_quantity >= 1 else False
 
             # Get product categories
             product_categories = []
@@ -372,10 +357,8 @@ def products():
                 "id": prod.item_code,
                 "name": prod.item_name,
                 "slug": prod.item_name,
-                "type":
-                "simple",
-                "status":
-                "publish",
+                "type": "simple",
+                "status": "publish",
                 "featured": False,
                 #"catalog_visibility": "visible",
                 "brand": prod.brand,
@@ -486,5 +469,5 @@ def products():
         return products_list
     except Exception as e:
         eci_log_error()
-        print(e)
+        print(frappe.get_traceback())
         return []

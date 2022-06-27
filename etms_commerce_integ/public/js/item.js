@@ -33,7 +33,6 @@ frappe.ui.form.on("Item", {
                     change: function (e) {
                         let self = d.get_field("vehicle_make");
                         let model = d.get_field("vehicle_model");
-                        console.log(self)
                         if (!self.value) {
                             model.df.read_only = true;
                         } else {
@@ -51,7 +50,6 @@ frappe.ui.form.on("Item", {
                     fieldtype: 'Link',
                     options: "ECI Vehicle Model",
                     get_query: function (frm) {
-                        console.log(d)
                         return {
                             filters: {
                                 parent_compat: d.get_value("vehicle_make")
@@ -71,7 +69,6 @@ frappe.ui.form.on("Item", {
                     change: function (e) {
                         let self = d.get_field("year_from");
                         let year_to = d.get_field("year_to");
-                        console.log(self)
                         if (!self.value) {
                             year_to.df.read_only = true;
                         } else {
@@ -127,6 +124,50 @@ frappe.ui.form.on("Item", {
         eci_cb1.css("background-color", "var(--gray-100)");
         eci_cb1.css("margin-right", "5px");
         eci_cb1.css("margin-left", "5px");
+
+        // add eci supplier stock levels dashboard
+        frappe.call({
+            method: "etms_commerce_integ.utils.get_item_stock_levels",
+            args: {
+                item_code: frm.doc.item_code
+            },
+            callback: function (r) {
+                let html = "";
+                
+                for (let entry of r.message) {
+                    html += `
+                            <div class="dashboard-list-item">
+                            <div class="row">
+                                <div class="col-sm-3" style="margin-top: 8px;">
+                                    <a data-type="warehouse" data-name="${entry.warehouse}">${entry.warehouse}</a>
+                                </div>
+                                <div class="col-sm-3" style="margin-top: 8px;">
+                                    
+                                        <a data-type="item"
+                                            data-name="${frm.doc.item_code}">${frm.doc.item_code} (${frm.doc.item_name})
+                                        </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="inline-graph">
+                                        <span>
+                                            ${entry.quantity}
+                                        </span>
+                                    </span>
+                                </div>
+        
+                                <div class="col-sm-2 text-right" style="margin: var(--margin-sm) 0;">
+        
+                                    <button style="margin-left: 7px;" class="btn btn-default btn-xs btn-add"
+                                        onclick="frappe.router.set_route('/app/eci-supplier-inventory')">${frappe._("Add")}</a>
+                                </div>
+        
+                            </div>
+                        </div>
+                    `
+                }
+                frm.dashboard.add_section(html, frappe._("ECI Multi Vendor Stock Levels"));
+            }
+        });
     }
 });
 
@@ -140,26 +181,26 @@ frappe.ui.form.on("Item", {
     }
 })
 
-frappe.ui.form.on("ECI Product Images Table", {
-    refresh: function () {
-        console.log('ECI Product Images Table ref');
-    },
-    image_title_add: function () {
-        console.log('row added');
-    },
-    product_image: function (frm, cdt, cdn) {
-        let d = locals[cdt, cdn];
-        d.item_title = frm.doc.image_title;
-    }
-});
+// frappe.ui.form.on("ECI Product Images Table", {
+//     refresh: function () {
+//         console.log('ECI Product Images Table ref');
+//     },
+//     image_title_add: function () {
+//         console.log('row added');
+//     },
+//     product_image: function (frm, cdt, cdn) {
+//         let d = locals[cdt, cdn];
+//         d.item_title = frm.doc.image_title;
+//     }
+// });
 
 
 frappe.ui.form.on("ECI Supplier Warehouse Table", {
-	supplier: function(frm, cdt, cdn) {
-		var row = frappe.get_doc(cdt, cdn)
-		frappe.db.get_value("ECI Supplier Warehouse", {name: row.supplier}, "supplier_warehouse_name").then(function(r) {
-				row.supplier_warehouse = r.message.supplier_warehouse_name;
-				cur_frm.refresh_fields()
-		})
-	}
+    supplier_warehouse: function (frm, cdt, cdn) {
+        var row = frappe.get_doc(cdt, cdn)
+        frappe.db.get_value("ECI Supplier Warehouse", { name: row.supplier_warehouse }, "supplier_name").then(function (r) {
+            row.supplier_name = r.message.supplier_name;
+            frm.refresh_fields()
+        })
+    }
 })
