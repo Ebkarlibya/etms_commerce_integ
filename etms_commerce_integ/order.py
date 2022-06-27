@@ -121,9 +121,9 @@ def customer_orders():
     
     _orders = frappe.get_all("Sales Order",
                              fields=[
-                                 "name", "delivery_date", "status", "total",
+                                 "name", "delivery_date", "docstatus", "status", "total",
                                  "total_qty", "eci_shipping_cost",
-                                 "eci_expected_delivery_date"
+                                 "delivery_date"
                              ],
                              filters={
                                  "customer": frappe.session.user,
@@ -136,16 +136,18 @@ def customer_orders():
     customer_orders = []
 
     for order in _orders:
-        customer_orders.append({
+        doc = {
             "id": order.name,
             "delivery_status": order.status,
-            "delivery_date": order.eci_expected_delivery_date,
             "shipping": order.shipping_address,
             "status": order.status,
             "quantity": int(order.total_qty),
             "total": float(order.total),
             "shipping_total": order.eci_shipping_cost
-        })
+        }
+        if order.docstatus != 0:
+            doc["delivery_date"] = order.delivery_date
+        customer_orders.append(doc)
     return customer_orders
 
 # @frappe.whitelist(allow_guest=True, methods=['POST'])
