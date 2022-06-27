@@ -33,24 +33,24 @@ def checkout():
     shipping_territory = frappe.form_dict["shipping_territory"]
     shipping_address = frappe.form_dict["shipping_address"]
     mode_of_payment = frappe.form_dict["mode_of_payment"]
-    expected_delivery_time = frappe.form_dict["expected_delivery_time"]
+    # expected_delivery_time = frappe.form_dict["expected_delivery_time"]
     
     # prepare items
     items = []
-    for item in line_items:
+    for item_code, qty in line_items.items():
         item_details = get_item_details({
-            "item_code": item['product_id'],
+            "item_code": item_code,
             "company": eci_settings.default_company,
             "doctype": "Sales Order",
             "conversion_rate": 1,
             "price_list": "Standard Selling"
         })
         items.append({
-            "item_code": item['product_id'],
+            "item_code": item_code,
             "rate": item_details['valuation_rate'],
             "margin_type": "",
             "delivery_date": datetime.now(),
-            "qty": item['quantity'],
+            "qty": qty,
             # "warehouse": woocommerce_settings.warehouse
         })
     # add shipping item from territory
@@ -78,45 +78,32 @@ def checkout():
     try:
         # the expected delivery date of territory
         so = frappe.get_doc({
-            "doctype":
-            "Sales Order",
-            "customer":
-            customer.name,
-            "customer_group":
-            eci_settings.default_customer_group,
-            "transaction_date":
-            nowdate(),
-            "eci_expected_delivery_date": expected_delivery_time,
-            "delivery_date": expected_delivery_time,
-            "company":
-            eci_settings.default_company,
+            "doctype": "Sales Order",
+            "customer": customer.name,
+            "customer_group": eci_settings.default_customer_group,
+            "transaction_date": nowdate(),
+            # "eci_expected_delivery_date": expected_delivery_time,
+            # "delivery_date": expected_delivery_time,
+            "company": eci_settings.default_company,
             # "selling_price_list": eci_settings.default_price_list,
-            "ignore_pricing_rule":
-            1,
-            "items":
-            items,
+            "ignore_pricing_rule": 1,
+            "items": items,
             # disabled discount as WooCommerce will send this both in the item rate and as discount
             #"apply_discount_on": "Net Total",
             #"discount_amount": flt(woocommerce_order.get("discount_total") or 0),
-            "currency":
-            eci_settings.default_currency,
-            "is_eci_order":
-            1,
-            "eci_shipping_territory":
-            shipping_territory,
-            "eci_shipping_address":
-            shipping_address,
-            "mode_of_payment":
-            mode_of_payment,
+            "currency": eci_settings.default_currency,
+            "is_eci_order": 1,
+            "eci_shipping_territory": shipping_territory,
+            "eci_shipping_address": shipping_address,
+            "mode_of_payment": mode_of_payment,
             # "taxes_and_charges": tax_rules,
             # "customer_address": billing_address,
             # "shipping_address_name": shipping_address
-            # TODO SHIPPING ADDR
         })
         frappe.flags.ignore_permissions = True
         frappe.set_user("administrator")
         so.insert()
-        so.submit()
+        # so.submit()
 
         return {"message": "your_order_accepted"}
     except Exception as e:
@@ -126,7 +113,12 @@ def checkout():
 @frappe.whitelist(allow_guest=False, methods=['GET'])
 @eci_verify_request
 def customer_orders():
+    page = frappe.form_dict["page"]
+    q = frappe.request.args
 
+    if "page" in q:
+        page = int(q['page']) - 1
+    
     _orders = frappe.get_all("Sales Order",
                              fields=[
                                  "name", "delivery_date", "status", "total",
@@ -137,7 +129,10 @@ def customer_orders():
                                  "customer": frappe.session.user,
                                  "is_eci_order": 1
                              },
-                             order_by="name desc")
+                             order_by="name desc",
+                             limit_start = page,
+                             limit_page_length=20
+                             )
     customer_orders = []
 
     for order in _orders:
