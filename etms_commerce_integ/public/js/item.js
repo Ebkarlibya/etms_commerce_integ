@@ -126,58 +126,62 @@ frappe.ui.form.on("Item", {
         eci_cb1.css("margin-left", "5px");
 
         // add eci supplier stock levels dashboard
-        frappe.call({
-            method: "etms_commerce_integ.utils.get_item_stock_levels",
-            args: {
-                item_code: frm.doc.item_code
-            },
-            callback: function (r) {
-                if(r.message == undefined || r.message.length == 0) return;
-                let html = "";
-                
-                for (let entry of r.message) {
-                    html += `
-                            <div class="dashboard-list-item">
-                            <div class="row">
-                                <div class="col-sm-3" style="margin-top: 8px;">
-                                    <a data-type="warehouse" data-name="${entry.warehouse}">${entry.warehouse}</a>
-                                </div>
-                                <div class="col-sm-3" style="margin-top: 8px;">
-                                    
-                                        <a data-type="item"
-                                            data-name="${frm.doc.item_code}">${frm.doc.item_code} (${frm.doc.item_name})
-                                        </a>
-                                </div>
-                                <div class="col-sm-4">
-                                    <span class="inline-graph">
-                                        <span>
-                                            ${entry.quantity}
+        if(cur_frm.doc.item_code) {
+            frappe.call({
+                method: "etms_commerce_integ.utils.get_item_stock_levels",
+                args: {
+                    item_code: frm.doc.item_code
+                },
+                callback: function (r) {
+                    if(r.message == undefined || r.message.length == 0) return;
+                    let html = "";
+                    
+                    for (let entry of r.message) {
+                        html += `
+                                <div class="dashboard-list-item">
+                                <div class="row">
+                                    <div class="col-sm-3" style="margin-top: 8px;">
+                                        <a data-type="warehouse" data-name="${entry.warehouse}">${entry.warehouse}</a>
+                                    </div>
+                                    <div class="col-sm-3" style="margin-top: 8px;">
+                                        
+                                            <a data-type="item"
+                                                data-name="${frm.doc.item_code}">${frm.doc.item_code} (${frm.doc.item_name})
+                                            </a>
+                                    </div>
+                                    <div class="col-sm-4" style="margin-top: 8px;">
+                                        <span class="inline-graph">
+                                            <span>
+                                                ${entry.quantity} (Qty)
+                                            </span>
                                         </span>
-                                    </span>
+                                    </div>
+                
+                                    <div class="col-sm-2 text-right" style="margin: var(--margin-sm) 0;">
+            
+                                        <button style="margin-left: 7px;" class="btn btn-default btn-xs btn-add"
+                                            onclick="frappe.new_doc('ECI Supplier Inventory', {'product': '${frm.doc.item_code}'})">${frappe._("Add")}</a>
+                                    </div>
+            
                                 </div>
-        
-                                <div class="col-sm-2 text-right" style="margin: var(--margin-sm) 0;">
-        
-                                    <button style="margin-left: 7px;" class="btn btn-default btn-xs btn-add"
-                                        onclick="frappe.router.set_route('/app/eci-supplier-inventory')">${frappe._("Add")}</a>
-                                </div>
-        
                             </div>
-                        </div>
-                    `
+                        `
+                    }
+                    frm.dashboard.add_section(html, frappe._("ECI Multi Vendor Stock Levels"));
                 }
-                frm.dashboard.add_section(html, frappe._("ECI Multi Vendor Stock Levels"));
-            }
-        });
+            });
+        }
     }
 });
 
 frappe.ui.form.on("Item", {
     before_save: function (frm) {
-        const mappedList = frm.doc.warehouses_to_check_item_availability.map(i => i.warehouse);
-
-        if (new Set(mappedList).size !== mappedList.length) {
-            frappe.throw(frappe._("ECI: Duplicated warehouses not allowed."));
+        if(frm.doc.warehouses_to_check_item_availability) {
+            const mappedList = frm.doc.warehouses_to_check_item_availability.map(i => i.warehouse);
+    
+            if (new Set(mappedList).size !== mappedList.length) {
+                frappe.throw(frappe._("ECI: Duplicated warehouses not allowed."));
+            }
         }
     }
 })

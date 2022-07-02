@@ -183,6 +183,7 @@ def get_item_stock_levels(item_code: str, warehouse: str = None):
     stock_levels = []
 
     item_warehouses = get_item_warehouses(item_code, 2)
+    # item_price = get_item_price(item_code)
 
     if not warehouse:
         for itm_wh in item_warehouses:
