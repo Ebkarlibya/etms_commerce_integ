@@ -271,7 +271,7 @@ def products():
 
             order by i.creation
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=False)
+        """, sql_escaped_values, as_dict=True, debug=True)
 
         for prod in eci_products:
 

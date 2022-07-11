@@ -3,7 +3,7 @@ from functools import wraps
 import frappe
 from frappe.core.doctype.user.user import User, test_password_strength
 from etms_commerce_integ.utils import eci_log_error
-from frappe.utils import get_url, password_strength, random_string
+from frappe.utils import random_string
 
 eci_settings = frappe.get_single("ECI Commerce Settings")
 
@@ -219,7 +219,8 @@ def sign_up():
     last_name = frappe.form_dict["last_name"]
     phone_number = frappe.form_dict["phone_number"]
     phone_number2 = frappe.form_dict["phone_number2"]
-
+    shipping_city = frappe.form_dict["shipping_city"]
+    shipping_address_1 = frappe.form_dict["shipping_address_1"]
 
     user_exist = frappe.db.get("User", username)
 
@@ -266,33 +267,48 @@ def sign_up():
 
     frappe.set_user("administrator")
     customer = frappe.get_doc({
-        "doctype":
-        "Customer",
-        "account_manager":
-        user.name,
-        "customer_name":
-        user.email,
-        "customer_group":
-        "Commercial",
-        "territory":
-        "All Territories",
-        "customer_type":
-        frappe._("Individual"),
-        "mobile_no":
-        phone_number,
+        "doctype": "Customer",
+        "account_manager": user.name,
+        "customer_name": user.email,
+        "customer_group": "Commercial",
+        "territory": "All Territories",
+        "customer_type": frappe._("Individual"),
+        "mobile_no": phone_number,
         "eci_mobile_no_2": phone_number2,
-        "default_price_list":
-        eci_settings.default_signup_customer_price_list
+        "default_price_list": eci_settings.default_signup_customer_price_list
     })
-
+    
     # generate confirmation key
     confirmation_key = random_string(25)
     customer.eci_email_confirmation_key = confirmation_key
 
-
+    # new customer
     customer.flags.ignore_mandatory = True
     customer.flags.ignore_permissions = True
     customer.insert(ignore_permissions=True)
+
+    # new address
+    new_address = frappe.get_doc({
+        "doctype": "Address",
+        "address_title": user.name,
+        "address_type": "Shipping",
+        "address_line1": shipping_address_1,
+        "city": shipping_city,
+        "country": "Libya",
+        "email_id": user.email,
+        "phone": user.mobile_no,
+        "links": [
+            {
+                "link_doctype": "Customer",
+                "link_name": user.name
+            }
+        ]
+    })
+
+    new_address.flags.ignore_mandatory = True
+    new_address.flags.ignore_permissions = True
+    new_address.insert()
+
 
     confirm_url = eci_settings.eci_domain + "/eci-confirm-email?key=" + confirmation_key
 
@@ -306,7 +322,7 @@ def sign_up():
         args={
             "confirm_url": confirm_url
             },
-            delayed=False
+        delayed=False
     )
 
     return {"message": "registered_successfully"}
