@@ -12,6 +12,9 @@ def get_next_ad():
                          fields=["ad_image", "display_order"],
                          filters={"enabled": True})
 
+    if len(ads) == 0:
+        return {"message": "no_ads"}
+
     next_ad = list(filter(lambda ad: ad.display_order == display_order, ads))
 
     if next_ad:

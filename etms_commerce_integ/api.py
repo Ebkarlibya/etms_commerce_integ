@@ -241,14 +241,16 @@ def products():
             sql_escaped_values["veh-compat-model"] = q["veh-compat-model"]
             sql_escaped_values["veh-compat-year"] = q["veh-compat-year"]
             sql_comp_cond = """
-                and exists (
-                    select v.vehicle_make, v.vehicle_model, v.vehicle_year, v.parent 
-                    from `tabECI Vehicle Compatibility Table` v
-                    where v.vehicle_make = %(veh-compat-make)s
-                    and v.vehicle_model = %(veh-compat-model)s
-                    and v.vehicle_year = %(veh-compat-year)s
-                    and i.item_code = v.parent
-            )
+                and (
+                    i.has_specific_compatibility = 0 or exists (
+                            select v.vehicle_make, v.vehicle_model, v.vehicle_year, v.parent 
+                            from `tabECI Vehicle Compatibility Table` v
+                            where v.vehicle_make = %(veh-compat-make)s
+                            and v.vehicle_model = %(veh-compat-model)s
+                            and v.vehicle_year = %(veh-compat-year)s
+                            and i.item_code = v.parent
+                    )
+                )
             """
 
         eci_products = frappe.db.sql(f"""
@@ -271,7 +273,7 @@ def products():
 
             order by i.creation
             limit {offset},{per_page}
-        """, sql_escaped_values, as_dict=True, debug=True)
+        """, sql_escaped_values, as_dict=True, debug=False)
 
         for prod in eci_products:
 
