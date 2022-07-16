@@ -219,3 +219,9 @@ def get_warehouse_delivery_days(warehouse: str, territory: str):
         return delivery_days[0].expected_delivery_days
     else:
         return None
+
+@frappe.whitelist(allow_guest=True, methods=["GET"])
+def get_minimum_client_version():
+    eci_settings = frappe.get_single("ECI Commerce Settings")
+
+    return eci_settings.minimum_client_version

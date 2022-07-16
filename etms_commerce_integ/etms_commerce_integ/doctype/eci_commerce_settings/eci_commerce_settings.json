@@ -10,6 +10,7 @@
   "settings_security",
   "allow_new_users_registrations",
   "eci_domain",
+  "minimum_client_version",
   "column_break_5",
   "api_key",
   "api_secret",
@@ -109,12 +110,20 @@
    "label": "Default SignUp Customer Price List",
    "options": "Price List",
    "reqd": 1
+  },
+  {
+   "default": "3.0.0",
+   "description": "Notify users lower than this version to update the client app.",
+   "fieldname": "minimum_client_version",
+   "fieldtype": "Data",
+   "label": "Minimum Client Version",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-06-19 09:57:52.542035",
+ "modified": "2022-07-16 15:36:16.471181",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Commerce Settings",

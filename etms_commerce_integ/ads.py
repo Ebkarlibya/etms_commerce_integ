@@ -11,17 +11,19 @@ from random import randint
 @eci_verify_request
 def get_next_ad():
 
-    ads = frappe.get_all("ECI Advertisements",
-                         fields=["enabled", "ad_image", "display_order"],
-                         filters={"enabled": True},
-                         order_by="display_order asc")
+    try:
+        ads = frappe.get_all("ECI Advertisements",
+                            fields=["enabled", "ad_image", "display_order"],
+                            filters={"enabled": True},
+                            order_by="display_order asc")
 
 
-    ads_len = len(ads)
-    if ads_len > 0:
-        rand_ad = randint(0, ads_len - 1)
-        return {"message": "next_ad", "data": ads[rand_ad]}
-
+        ads_len = len(ads)
+        if ads_len > 0:
+            rand_ad = randint(0, ads_len - 1)
+            return {"message": "next_ad", "data": ads[rand_ad]}
+    except Exception as e:
+        eci_log_error()
 
 # @frappe.whitelist(allow_guest=True, methods=["GET"])
 # @eci_verify_request
