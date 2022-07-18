@@ -33,6 +33,7 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Item" : "public/js/item.js",
+    "ECI Advertisements": "public/js/eci_advertisements.js",
     "ECI Customer Vehicles" : "public/js/eci_customer_vehicles.js",
     "ECI Vehicle Make": "public/js/eci_vehicle_make.js",
     "ECI Vehicle Model": "public/js/eci_vehicle_model.js",

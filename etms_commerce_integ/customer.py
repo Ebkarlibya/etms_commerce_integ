@@ -6,11 +6,11 @@ from etms_commerce_integ.auth import eci_log_error
 
 @frappe.whitelist(allow_guest=False, methods=["GET"])
 @eci_verify_request
-def get_customer_vehicles():
+def get_customer_vehicles(customer=None):
     vehicles = frappe.get_all(
         "ECI Customer Vehicles Table",
         fields=["idx", "name", "vehicle_make", "vehicle_model", "vehicle_year"],
-        filters={"parent": frappe.session.user},
+        filters={"parent": customer or frappe.session.user},
         order_by="idx asc")
 
     return vehicles

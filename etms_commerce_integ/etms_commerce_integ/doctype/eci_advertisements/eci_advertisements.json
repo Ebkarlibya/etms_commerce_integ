@@ -10,7 +10,9 @@
   "enabled",
   "title",
   "display_order",
-  "ad_image"
+  "ad_image",
+  "targeted_advertisement_section",
+  "to_customer_vehicles"
  ],
  "fields": [
   {
@@ -40,11 +42,22 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Enabled"
+  },
+  {
+   "fieldname": "targeted_advertisement_section",
+   "fieldtype": "Section Break",
+   "label": "Targeted Advertisement"
+  },
+  {
+   "fieldname": "to_customer_vehicles",
+   "fieldtype": "Table",
+   "label": "To Customer with Specific Vehicles",
+   "options": "ECI Advertisements Targeted Customer Vehicles Table"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-02 10:50:06.639444",
+ "modified": "2022-07-17 09:20:05.971659",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Advertisements",

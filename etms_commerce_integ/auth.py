@@ -9,7 +9,7 @@ eci_settings = frappe.get_single("ECI Commerce Settings")
 
 
 def eci_verify_request(func):
-
+    @wraps(func)
     def wrapper(*args, **kwargs):
         headers = frappe.request.headers
         if eci_settings.enabled == 0:
