@@ -19,7 +19,7 @@ frappe.ui.form.on("Item", {
         });
 
         // items insert dialog
-        let compat_table = document.querySelector("div[data-fieldname='eci_vehicle_compatibility']");
+        // let compat_table = document.querySelector("div[data-fieldname='eci_vehicle_compatibility']");
         // compat_table.style.maxHeight = "800px";
         // compat_table.style.overflowY = "auto";
         let eci_cb1 = frm.get_field("eci_vehicle_compatibility").grid.add_custom_button(frappe._("ECI Bulk Insert"), function () {

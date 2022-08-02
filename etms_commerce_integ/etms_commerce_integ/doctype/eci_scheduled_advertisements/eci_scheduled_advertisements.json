@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-08-01 19:22:02.698446",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "display_from",
+  "column_break_2",
+  "display_to"
+ ],
+ "fields": [
+  {
+   "fieldname": "display_from",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Display From"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "display_to",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Display To"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-08-01 19:22:02.698446",
+ "modified_by": "Administrator",
+ "module": "Etms Commerce Integ",
+ "name": "ECI Scheduled Advertisements",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

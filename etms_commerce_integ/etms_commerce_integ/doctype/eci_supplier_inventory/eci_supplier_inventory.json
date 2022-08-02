@@ -29,7 +29,6 @@
   {
    "fieldname": "supplier_warehouse",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Supplier Warehouse",
    "options": "ECI Supplier Warehouse",
    "reqd": 1
@@ -37,7 +36,6 @@
   {
    "fieldname": "product",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Product",
    "options": "Item",
    "reqd": 1
@@ -95,6 +93,7 @@
    "fetch_from": "product.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Item Name",
    "read_only": 1
   },
@@ -102,6 +101,7 @@
    "fetch_from": "product.eci_mfr_part_number",
    "fieldname": "mfr",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "MFR",
    "read_only": 1
   },
@@ -109,6 +109,7 @@
    "fetch_from": "product.brand",
    "fieldname": "brand",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Brand",
    "read_only": 1
   },
@@ -126,7 +127,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-07-02 13:32:18.372447",
+ "modified": "2022-07-31 22:25:47.958459",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Inventory",

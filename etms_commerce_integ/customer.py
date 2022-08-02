@@ -75,3 +75,9 @@ def delete_customer_vehicle():
         return {"message": "selected_vehicle_deleted", "data": vehicles}
     except Exception as e:
         eci_log_error()
+
+def get_customer_orm(customer_name):
+
+    if frappe.db.exists("Customer", customer_name):
+        return frappe.get_doc("Customer", customer_name)
+    return None
