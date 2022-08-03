@@ -9,4 +9,4 @@ def on_update(doc, method):
                     "selling": True
                 })
         if len(item_prices) == 0:
-            frappe.throw(frappe._(f"ECI: Cant prublish, Item {doc.item_name} has no <a target='_blank' href='/app/item-price'>item sell price</a>"))
+            frappe.throw(frappe._(f"ECI: Cant Publish, Item {doc.item_name} has no <a target='_blank' href='/app/item-price'>item sell price</a>"))

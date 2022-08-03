@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:title",
+ "autoname": "format:ECI-Ad:{YYYY}-{MM}-{DD}-{######}",
  "creation": "2022-05-31 09:22:41.844617",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -9,7 +9,6 @@
  "field_order": [
   "enabled",
   "title",
-  "display_order",
   "ad_image",
   "display_schedule",
   "targeted_advertisement_section",
@@ -29,15 +28,6 @@
    "fieldname": "ad_image",
    "fieldtype": "Attach Image",
    "label": "Ad Image"
-  },
-  {
-   "description": "\u062d\u062f\u062f \u062a\u0631\u062a\u064a\u0628 \u0627\u0644\u0639\u0631\u0636 \u0641\u064a \u0627\u0644\u062a\u0637\u0628\u064a\u0642: 10, 20, 40, 50 \u0625\u0644\u062e....",
-   "fieldname": "display_order",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "in_list_view": 1,
-   "label": "Display Order",
-   "options": "\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50"
   },
   {
    "default": "1",
@@ -71,7 +61,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-01 19:39:14.674846",
+ "modified": "2022-08-02 21:15:41.437961",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Advertisements",

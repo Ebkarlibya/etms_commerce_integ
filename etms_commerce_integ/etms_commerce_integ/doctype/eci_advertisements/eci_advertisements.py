@@ -2,33 +2,33 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.utils import now
+from frappe.utils import get_url_to_form
+from frappe.utils import format_datetime
 from frappe.model.document import Document
 
 class ECIAdvertisements(Document):
-    pass
-# 	def validate(self):
-#         pass
+    def validate(self):
+        validate_display_schedule(self)
 
+def validate_display_schedule(self):
 
-# def validate_display_schedule(self):
-#     datetime_now = now()
+    for ds in self.display_schedule:
+        ads = frappe.get_all(
+                "ECI Scheduled Advertisements",
+                fields="*",
+                filters={
+                    "display_from": ("<", ds.display_from),
+                    "display_to": (">", ds.display_from),
+                }
+            )
 
-#     for ds in self.display_schedule:
-#         print(ds)
-#         ads = frappe.get_all(
-#                 "ECI Scheduled Advertisements",
-#                 fields="*",
-#                 filters={
-#                     "parent": ("!=", self.name),
-#                     "display_to": ("<=", ds.display_from),
-#                 }
-#             )
-#             # where display_from < '2022-08-02 10:30:00' and display_to > '2022-08-02 15:00:00';
-
-#         print(ads)
-#         if len(ads) > 0:
-#             frappe.throw(f"ECI: {frappe._(f'Display period already exist in Ad: ({ads[0].parent}')})")
+        if len(ads) > 0:            
+            frappe.throw(f"""ECI: Display period already exist in:
+             <a href="{get_url_to_form("ECI Advertisements", ads[0].parent)}">Ad: ({ads[0].parent})</p>
+             <p>Row: {ads[0].idx}</p>
+             <p>From: {format_datetime(ads[0].display_from, "yyyy-mm-dd HH:mm")}</p>
+             <p>To: {format_datetime(ads[0].display_to, "yyyy-mm-dd HH:mm")}</p>
+             """)
 
 # def is_ad_exist(self):
 # 	ads = frappe.get_all(

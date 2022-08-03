@@ -37,8 +37,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2022-06-26 20:55:57.013501",
+ "links": [
+  {
+   "link_doctype": "ECI Supplier Inventory",
+   "link_fieldname": "supplier_warehouse"
+  }
+ ],
+ "modified": "2022-08-03 10:37:25.622618",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Warehouse",
