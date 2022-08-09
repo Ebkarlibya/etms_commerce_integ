@@ -200,7 +200,9 @@ fixtures = [
     "Custom Field",
     "filters": [[
         "fieldname", "in",
-        ("eci_product_section",
+        (
+        # Item
+        "eci_product_section",
         "eci_product",
         "eci_mfr_part_number",
         "publish_to_commerce_app",
@@ -217,15 +219,16 @@ fixtures = [
         "eci_product_images",
         "has_specific_compatibility",
         "eci_vehicle_compatibility",
-        "eci_order_section",
-        "is_eci_order",
-        "eci_shipping_territory",
-        "eci_shipping_address",
         "mode_of_payment",
         "eci_expected_delivery_date",
         "eci_section",
         "expected_territory_delivery_time",
-        # Customer Doctype
+        # Sales Order
+        "eci_order_section",
+        "is_eci_order",
+        "eci_shipping_territory",
+        "eci_shipping_address",
+        # Customer
         "eci_customer_section",
         "eci_is_customer_email_verified",
         "eci_email_confirmation_key",

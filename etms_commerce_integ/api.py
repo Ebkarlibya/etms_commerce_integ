@@ -81,45 +81,49 @@ def request_part():
 @frappe.whitelist(allow_guest=True)
 @eci_verify_request
 def categories():
-    frappe.get_all("Item", filters={})
-    categories = []
-    eci_settings = frappe.get_single("ECI Commerce Settings")
+    try:
+        frappe.get_all("Item", filters={})
+        categories = []
+        eci_settings = frappe.get_single("ECI Commerce Settings")
 
-    eci_categories = frappe.get_all(
-        "ECI Category",
-        fields=["category_image", "category_name", "parent_eci_category"],
-        order_by="order_weight asc")
+        eci_categories = frappe.get_all(
+            "ECI Category",
+            fields=["category_image", "category_name", "parent_eci_category"],
+            order_by="order_weight asc")
 
-    for cat in eci_categories:
-        # count items under this category
-        # count = frappe.db.sql(f"""
-        #     select count(name) from `tabECI Categories Table`
-        #     where category_name = '{cat.category_name}'
-        #     or sub_category_1 = '{cat.category_name}'
-        # """)
-        # flutter parent must be "0"
-        parent = cat.parent_eci_category
-        if not cat.parent_eci_category:
-            parent = "0"
+        for cat in eci_categories:
+            # count items under this category
+            # count = frappe.db.sql(f"""
+            #     select count(name) from `tabECI Categories Table`
+            #     where category_name = '{cat.category_name}'
+            #     or sub_category_1 = '{cat.category_name}'
+            # """)
+            # flutter parent must be "0"
+            parent = cat.parent_eci_category
+            if not cat.parent_eci_category:
+                parent = "0"
 
-        # build category image url
-        category_image_url = ""
-        if cat.category_image:
-            category_image_url = eci_settings.eci_domain + cat.category_image
-            #category_image_url = get_url() + cat.category_image
+            # build category image url
+            category_image_url = ""
+            if cat.category_image:
+                category_image_url = eci_settings.eci_domain + cat.category_image
+                #category_image_url = get_url() + cat.category_image
 
-        categories.append({
-            "id": cat.category_name,
-            "name": cat.category_name,
-            "slug": cat.category_name,
-            "description": cat.category_description,
-            "image": {
-                "src": category_image_url
-            },
-            "parent": parent,
-            "count": 0
-        })
-    return categories
+            categories.append({
+                "id": cat.category_name,
+                "name": cat.category_name,
+                "slug": cat.category_name,
+                "description": cat.category_description,
+                "image": {
+                    "src": category_image_url
+                },
+                "parent": parent,
+                "count": 0
+            })
+        return categories
+    except Exception as e:
+        print(e)
+        print(frappe.get_traceback())
 
 
 @frappe.whitelist(allow_guest=True, methods=["GET"])
