@@ -105,6 +105,9 @@ doctype_js = {
 doc_events = {
 	"Item": {
 		"on_update": "etms_commerce_integ.events.item.on_update"
+	},
+    "Sales Order": {
+		"on_update": "etms_commerce_integ.events.so.on_update"
 	}
 }
 

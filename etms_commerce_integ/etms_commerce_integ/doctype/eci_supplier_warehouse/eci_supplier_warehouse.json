@@ -43,7 +43,7 @@
    "link_fieldname": "supplier_warehouse"
   }
  ],
- "modified": "2022-08-03 10:37:25.622618",
+ "modified": "2022-10-13 15:51:25.118565",
  "modified_by": "Administrator",
  "module": "Etms Commerce Integ",
  "name": "ECI Supplier Warehouse",
@@ -57,7 +57,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "ECI Product Manager",
    "share": 1,
    "write": 1
   }
