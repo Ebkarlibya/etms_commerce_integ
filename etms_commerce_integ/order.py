@@ -47,7 +47,7 @@ def checkout():
         })
         items.append({
             "item_code": item_code,
-            "rate": item_details['valuation_rate'],
+            # "rate": item_details['valuation_rate'],
             "margin_type": "",
             "delivery_date": datetime.now(),
             "qty": qty,
