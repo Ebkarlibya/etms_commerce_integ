@@ -122,7 +122,7 @@ def categories():
             })
         return categories
     except Exception as e:
-        print(e)
+        eci_log_error()
         print(frappe.get_traceback())
 
 

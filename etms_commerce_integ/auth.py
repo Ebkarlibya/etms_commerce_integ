@@ -26,10 +26,9 @@ def eci_verify_request(func):
             # del kwargs['cmd']
             return func_res
 
-        except Exception as e:
+        except :
             eci_log_error()
             print(frappe.get_traceback())
-            print(e.args)
             return {"message": "internal_server_error"}
 
     return wrapper
@@ -204,6 +203,7 @@ def login():
 
     except Exception as e:
         eci_log_error()
+        print(frappe.get_traceback())
         return {"message": "faild_to_login"}
 
 

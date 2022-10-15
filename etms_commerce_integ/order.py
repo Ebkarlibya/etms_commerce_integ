@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 import re
-from etms_commerce_integ.utils import get_item_quantity, get_item_warehouses, get_warehouse_delivery_days
+from etms_commerce_integ.utils import eci_log_error, get_item_quantity, get_item_warehouses, get_warehouse_delivery_days
 from frappe.utils import add_to_date, now, nowdate
 import frappe
 from etms_commerce_integ.auth import eci_verify_request
@@ -11,71 +11,75 @@ from erpnext.stock.get_item_details import get_item_details
 @frappe.whitelist(allow_guest=True, methods=['GET'])
 @eci_verify_request
 def get_shipping_cost():
-    shipping_territory = frappe.form_dict["shipping_territory"]
-    shipping_items = frappe.get_all("Item",
-                                    fields=["standard_rate"],
-                                    filters={
-                                        "is_shipping_item": 1,
-                                        "shipping_territory":
-                                        shipping_territory
-                                    })
+    try:
+        shipping_territory = frappe.form_dict["shipping_territory"]
+        shipping_items = frappe.get_all("Item",
+                                        fields=["standard_rate"],
+                                        filters={
+                                            "is_shipping_item": 1,
+                                            "shipping_territory":
+                                            shipping_territory
+                                        })
 
-    if shipping_items:
-        return shipping_items[0]['standard_rate']
-    return 0.0
+        if shipping_items:
+            return shipping_items[0]['standard_rate']
+        return 0.0
+    except:
+        eci_log_error()
+        print(frappe.get_traceback())
 
 @frappe.whitelist(allow_guest=False, methods=["POST"])
 @eci_verify_request
 def checkout():
-    eci_settings = frappe.get_single("ECI Commerce Settings")
-    customer = frappe.get_doc("Customer", frappe.session.user)
-    line_items = frappe.form_dict["line_items"]
-    shipping_territory = frappe.form_dict["shipping_territory"]
-    shipping_address = frappe.form_dict["shipping_address"]
-    mode_of_payment = frappe.form_dict["mode_of_payment"]
-    # expected_delivery_time = frappe.form_dict["expected_delivery_time"]
-    
-    # prepare items
-    items = []
-    for item_code, qty in line_items.items():
-        item_details = get_item_details({
-            "item_code": item_code,
-            "company": eci_settings.default_company,
-            "doctype": "Sales Order",
-            "conversion_rate": 1,
-            "price_list": "Standard Selling"
-        })
-        items.append({
-            "item_code": item_code,
-            # "rate": item_details['valuation_rate'],
-            "margin_type": "",
-            "delivery_date": datetime.now(),
-            "qty": qty,
-            # "warehouse": woocommerce_settings.warehouse
-        })
-    # add shipping item from territory
-    # shipping_item = frappe.get_all("Item",
-    #                                fields=["item_code", "standard_rate"],
-    #                                filters={
-    #                                    "is_shipping_item": 1,
-    #                                    "shipping_territory": shipping_territory
-    #                                })
-    # shipping_item_details = get_item_details({
-    #     "item_code": shipping_item[0].item_code,
-    #     "company": eci_settings.default_company,
-    #     "doctype": "Sales Order",
-    #     "conversion_rate": 1,
-    #     "price_list": "Standard Selling"
-    # })
-    # shipping item
-    # items.append({
-    #     "item_code": shipping_item[0].item_code,
-    #     "rate": shipping_item[0].standard_rate,
-    #     "margin_type": "",
-    #     "delivery_date": datetime.now(),
-    #     "qty": 1
-    # })
     try:
+        eci_settings = frappe.get_single("ECI Commerce Settings")
+        customer = frappe.get_doc("Customer", frappe.session.user)
+        line_items = frappe.form_dict["line_items"]
+        shipping_territory = frappe.form_dict["shipping_territory"]
+        shipping_address = frappe.form_dict["shipping_address"]
+        mode_of_payment = frappe.form_dict["mode_of_payment"]
+        # expected_delivery_time = frappe.form_dict["expected_delivery_time"]
+        
+        # prepare items
+        items = []
+        for item_code, qty in line_items.items():
+            item_details = get_item_details({
+                "item_code": item_code,
+                "company": eci_settings.default_company,
+                "doctype": "Sales Order",
+                "conversion_rate": 1,
+                "price_list": "Standard Selling"
+            })
+            items.append({
+                "item_code": item_code,
+                # "rate": item_details['valuation_rate'],
+                "margin_type": "",
+                "delivery_date": datetime.now(),
+                "qty": qty,
+                # "warehouse": woocommerce_settings.warehouse
+            })
+        # add shipping item from territory
+        # shipping_item = frappe.get_all("Item",
+        #                                fields=["item_code", "standard_rate"],
+        #                                filters={
+        #                                    "is_shipping_item": 1,
+        #                                    "shipping_territory": shipping_territory
+        #                                })
+        # shipping_item_details = get_item_details({
+        #     "item_code": shipping_item[0].item_code,
+        #     "company": eci_settings.default_company,
+        #     "doctype": "Sales Order",
+        #     "conversion_rate": 1,
+        #     "price_list": "Standard Selling"
+        # })
+        # shipping item
+        # items.append({
+        #     "item_code": shipping_item[0].item_code,
+        #     "rate": shipping_item[0].standard_rate,
+        #     "margin_type": "",
+        #     "delivery_date": datetime.now(),
+        #     "qty": 1
+        # })
         # the expected delivery date of territory
         so = frappe.get_doc({
             "doctype": "Sales Order",
@@ -106,50 +110,54 @@ def checkout():
         # so.submit()
 
         return {"message": "your_order_accepted"}
-    except Exception as e:
-        print(e)
+    except:
+        eci_log_error()
+        print(frappe.get_traceback())
 
 
 @frappe.whitelist(allow_guest=False, methods=['GET'])
 @eci_verify_request
 def customer_orders():
-    page = frappe.form_dict["page"]
-    q = frappe.request.args
+    try:
+        page = frappe.form_dict["page"]
+        q = frappe.request.args
 
-    if "page" in q:
-        page = int(q['page']) - 1
-    
-    _orders = frappe.get_all("Sales Order",
-                             fields=[
-                                 "name", "delivery_date", "docstatus", "status", "total",
-                                 "total_qty", "eci_shipping_cost",
-                                 "delivery_date"
-                             ],
-                             filters={
-                                 "customer": frappe.session.user,
-                                 "is_eci_order": 1
-                             },
-                             order_by="name desc",
-                             limit_start = page,
-                             limit_page_length=20
-                             )
-    customer_orders = []
+        if "page" in q:
+            page = int(q['page']) - 1
+        
+        _orders = frappe.get_all("Sales Order",
+                                fields=[
+                                    "name", "delivery_date", "docstatus", "status", "total",
+                                    "total_qty", "eci_shipping_cost",
+                                    "delivery_date"
+                                ],
+                                filters={
+                                    "customer": frappe.session.user,
+                                    "is_eci_order": 1
+                                },
+                                order_by="name desc",
+                                limit_start = page,
+                                limit_page_length=20
+                                )
+        customer_orders = []
 
-    for order in _orders:
-        doc = {
-            "id": order.name,
-            "delivery_status": order.status,
-            "shipping": order.shipping_address,
-            "status": order.status,
-            "quantity": int(order.total_qty),
-            "total": float(order.total),
-            "shipping_total": order.eci_shipping_cost
-        }
-        if order.docstatus != 0:
-            doc["delivery_date"] = order.delivery_date
-        customer_orders.append(doc)
-    return customer_orders
-
+        for order in _orders:
+            doc = {
+                "id": order.name,
+                "delivery_status": order.status,
+                "shipping": order.shipping_address,
+                "status": order.status,
+                "quantity": int(order.total_qty),
+                "total": float(order.total),
+                "shipping_total": order.eci_shipping_cost
+            }
+            if order.docstatus != 0:
+                doc["delivery_date"] = order.delivery_date
+            customer_orders.append(doc)
+        return customer_orders
+    except:
+        eci_log_error()
+        print(frappe.get_traceback())
 # @frappe.whitelist(allow_guest=True, methods=['POST'])
 # @eci_verify_request
 # def get_expected_delivery_time4():

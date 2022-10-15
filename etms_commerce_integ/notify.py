@@ -1,3 +1,4 @@
+from etms_commerce_integ.utils import eci_log_error
 import onesignal
 import frappe
 import json
@@ -49,5 +50,6 @@ def ets_send_notification(message, username, data=None):
 
             return None
     except Exception as e:
-        print(e)
+        eci_log_error()
+        print(frappe.get_traceback())
         frappe.log_error(log_data, title="ECI Error")

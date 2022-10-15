@@ -60,5 +60,6 @@ def get_next_ad():
             else:
                 ads.append(ad)
         return ads
-    except Exception as e:
+    except:
         eci_log_error()
+        print(frappe.get_traceback())

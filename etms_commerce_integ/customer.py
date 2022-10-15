@@ -53,8 +53,9 @@ def save_customer_vehicle():
             order_by="idx asc")
 
         return {"message": "selected_vehicle_saved", "data": vehicles}
-    except Exception as e:
+    except:
         eci_log_error()
+        print(frappe.get_traceback())
 
 
 @frappe.whitelist(allow_guest=False, methods=["POST"])
@@ -75,6 +76,7 @@ def delete_customer_vehicle():
         return {"message": "selected_vehicle_deleted", "data": vehicles}
     except Exception as e:
         eci_log_error()
+        print(frappe.get_traceback())
 
 def get_customer_orm(customer_name):
 
