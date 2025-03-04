@@ -1,5 +1,5 @@
 import frappe
-from etms_commerce_integ.notify import ets_send_notification
+# from etms_commerce_integ.notify import ets_send_notification
 
 def on_update(doc, method):
     print("new status")
